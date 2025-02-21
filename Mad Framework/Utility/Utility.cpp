@@ -18,7 +18,7 @@ namespace MadFramework::Utility
 				//I was wondering why my Window resized and the Game froze then I realized I got my debug Console handle lol
 				wchar_t window_class_name[MAX_PATH];
 				if (GetClassNameW(hwnd, window_class_name, MAX_PATH) &&
-					wcscmp(window_class_name, L"ConsoleWindowClass") != 0 &&
+					wcscmp(window_class_name, L"ConsoleWindowClass") != 0 && wcscmp(window_class_name, L"DXGIWatchdogThreadWindow") != 0 &&
 					pWindowInfo->processID == curr_processID)
 				{
 					GUITHREADINFO gui_thread_info{ .cbSize = sizeof(GUITHREADINFO) };
