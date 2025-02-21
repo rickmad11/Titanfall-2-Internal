@@ -5,9 +5,9 @@
 
 namespace MadFramework::RenderHooks
 {
+	static bool Initialized = false;
 	DECLSPEC_NOINLINE HRESULT __stdcall Present(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT Flags)
 	{
-		static bool Initialized = false;
 		if(!Initialized)
 		{
 			Initialized = MadRenderer::DX11::Get()->Initialize(pSwapChain);
@@ -32,7 +32,7 @@ namespace MadFramework::RenderHooks
 
 	DECLSPEC_NOINLINE HRESULT __stdcall ResizeBuffers(IDXGISwapChain* pSwapChain, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags)
 	{
-		if(pSwapChain)
+		if(pSwapChain && Initialized)
 		{
 			MadRenderer::DX11::BeforeResize();
 			HRESULT result = ihResizeBuffers.stdcall<HRESULT>(pSwapChain, BufferCount, Width, Height, NewFormat, SwapChainFlags);
