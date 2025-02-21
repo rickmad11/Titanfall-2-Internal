@@ -4,6 +4,10 @@ Works on Npcs and Players (multiplayer)
 
 MadFramework is in testing and is missing a lot of stuff. I'm planning to make a public release of my internal framework whenever it is done. 
 
+Renderer used: https://github.com/rickmad11/MadRenderer-Internal
+
+gui framework used: https://github.com/zxvnme/zgui
+
 Pictures:
 
 ![Screenshot 2025-02-21 223841](https://github.com/user-attachments/assets/f71e961a-deb7-461b-9d74-a13b2384d911)
