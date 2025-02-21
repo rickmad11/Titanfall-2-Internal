@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{5e9485c6-b7a5-46fa-a7f3-6293312132aa}</ProjectGuid>
+    <RootNamespace>Titanfall2Internal</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PublicIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PublicIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PublicIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PublicIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;$(PublicIncludeDirectories)</PublicIncludeDirectories>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Mad Framework\lib\MadRenderer Internal;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Mad Framework\lib\MadRenderer Internal;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Mad Framework\lib\MadRenderer Internal;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Mad Framework\lib\MadRenderer Internal;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Mad Framework\Config Manager\ConfigManager.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVars.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\C_BaseEntity.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IClientRenderable.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IEngineTrace.cpp" />
+    <ClCompile Include="Mad Framework\Framework.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\ClientClass.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interface Manager\Interface Manager.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IBaseClientDLL.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IClientEntityList.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IClientNetworkable.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IVEngineClient.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IViewRender.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\NetVarManager\NetVarManager.cpp" />
+    <ClCompile Include="Mad Framework\Hooks\Source Engine\Source Engine Hooks.cpp" />
+    <ClCompile Include="Mad Framework\Hooks\Windows\Windows Hooks.cpp" />
+    <ClCompile Include="Mad Framework\lib\MadRenderer Internal\DX11.cpp" />
+    <ClCompile Include="Mad Framework\lib\SafetyHook\safetyhook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Mad Framework\lib\SafetyHook\Zydis.c">
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Level1</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWarningAsError>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Level1</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</TreatWarningAsError>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Level1</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</TreatWarningAsError>
+      <WarningLevel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Level1</WarningLevel>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</TreatWarningAsError>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Mad Framework\lib\ZGUI\zgui.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</TreatWarningAsError>
+      <TreatWarningAsError Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</TreatWarningAsError>
+    </ClCompile>
+    <ClCompile Include="Mad Framework\Log Manager\LogManager.cpp" />
+    <ClCompile Include="Mad Framework\Hooks\DirectX11\DirectX11 Hooks.cpp" />
+    <ClCompile Include="Mad Framework\Hooks\HookHelper.cpp" />
+    <ClCompile Include="Mad Framework\Menu\Menu.cpp" />
+    <ClCompile Include="Mad Framework\Utility\Math\Math.cpp" />
+    <ClCompile Include="Mad Framework\Utility\Memory\Memory.cpp" />
+    <ClCompile Include="Mad Framework\Utility\Utility.cpp" />
+    <ClCompile Include="pch\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\AntiScreenshot\Antiscreenshot.cpp" />
+    <ClCompile Include="src\Features\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="src\Features\Misc\MiscVisuals.cpp" />
+    <ClCompile Include="src\Features\Misc\HitSound.cpp" />
+    <ClCompile Include="src\Features\Misc\SaveManager.cpp" />
+    <ClCompile Include="src\Features\Visuals\ESP.cpp" />
+    <ClCompile Include="src\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mad Framework\Config Manager\ConfigManager.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVars.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CTraceFilter.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CUserCmd.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CWeapon.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IEngineTrace.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\ITraceFilter.h" />
+    <ClInclude Include="Mad Framework\Framework.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CBaseHandle.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVarsBase.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ClientClass.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CViewRender.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CViewSetup.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\C_BaseEntity.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\matrix3x4_t.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\QAngle.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\Quaternion.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\RecvProp.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\RecvTable.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\VMatrix.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\vrect_t.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interface Manager\Interface Manager.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IBaseClientDLL.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IClientEntity.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IClientEntityList.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IClientNetworkable.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IClientRenderable.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IClientThinkable.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IClientUnknown.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IHandleEntity.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\INetChannelInfo.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IVEngineClient.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IViewRender.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\NetVarManager\NetVarManager.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Source-SDK.h" />
+    <ClInclude Include="Mad Framework\Headers.h" />
+    <ClInclude Include="Mad Framework\Hooks\DirectX11\DirectX11 Hooks.h" />
+    <ClInclude Include="Mad Framework\Hooks\Source Engine\Source Engine Hooks.h" />
+    <ClInclude Include="Mad Framework\Hooks\Windows\Windows Hooks.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\CursorRaw.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\DX11.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\font.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\Audio.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\BufferHelpers.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\CommonStates.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\DDSTextureLoader.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\DirectXHelpers.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\Effects.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\GamePad.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\GeometricPrimitive.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\GraphicsMemory.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\Keyboard.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\Model.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\Mouse.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\PostProcess.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\PrimitiveBatch.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\ScreenGrab.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\SimpleMath.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\SpriteBatch.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\SpriteFont.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\VertexTypes.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\WICTextureLoader.h" />
+    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\XboxDDSTextureLoader.h" />
+    <ClInclude Include="Mad Framework\lib\mINI\ini.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\ColorConsoleAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\ConsoleAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\DebugOutputAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\DynamicAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\EventLogAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\IAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Appenders\RollingFileAppender.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Converters\NativeEOLConverter.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Converters\UTF8Converter.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Formatters\CsvFormatter.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Formatters\FuncMessageFormatter.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Formatters\MessageOnlyFormatter.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Formatters\TxtFormatter.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Helpers\AscDump.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Helpers\HexDump.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Helpers\PrintVar.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Init.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Initializers\ConsoleInitializer.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Initializers\RollingFileInitializer.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Log.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Logger.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Record.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Severity.h" />
+    <ClInclude Include="Mad Framework\lib\plog\Util.h" />
+    <ClInclude Include="Mad Framework\lib\plog\WinApi.h" />
+    <ClInclude Include="Mad Framework\lib\SafetyHook\safetyhook.hpp" />
+    <ClInclude Include="Mad Framework\lib\SafetyHook\Zydis.h" />
+    <ClInclude Include="Mad Framework\lib\ZGUI\zgui.hh" />
+    <ClInclude Include="Mad Framework\Log Manager\LogManager.h" />
+    <ClInclude Include="Mad Framework\Menu\Menu.h" />
+    <ClInclude Include="Mad Framework\Settings.h" />
+    <ClInclude Include="Mad Framework\Hooks\HookHelper.h" />
+    <ClInclude Include="Mad Framework\Types.h" />
+    <ClInclude Include="Mad Framework\Utility\Math\Math.h" />
+    <ClInclude Include="Mad Framework\Utility\Memory\Memory.h" />
+    <ClInclude Include="Mad Framework\Utility\Utility.h" />
+    <ClInclude Include="Mad Framework\Windows\PEB.h" />
+    <ClInclude Include="Mad Framework\Windows\PEB32.h" />
+    <ClInclude Include="Mad Framework\Windows\TEB.h" />
+    <ClInclude Include="Mad Framework\Windows\TEB32.h" />
+    <ClInclude Include="pch\pch.h" />
+    <ClInclude Include="src\AntiScreenshot\Antiscreenshot.h" />
+    <ClInclude Include="src\Features\Aimbot\Aimbot.h" />
+    <ClInclude Include="src\Features\Misc\crosshairRawData.h" />
+    <ClInclude Include="src\Features\Misc\HitSound.h" />
+    <ClInclude Include="src\Features\Misc\HitSoundFiles.h" />
+    <ClInclude Include="src\Features\Misc\MiscVisuals.h" />
+    <ClInclude Include="src\Features\Misc\SaveManager.h" />
+    <ClInclude Include="src\Features\Visuals\ESP.h" />
+    <ClInclude Include="src\Features\Visuals\Visuals.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Mad Framework\lib\MadRenderer Internal\Inc\SimpleMath.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Mad Framework\lib\MadRenderer Internal\DirectXTK.lib" />
+    <Library Include="Mad Framework\lib\MadRenderer Internal\MadRenderer Internal.lib" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
