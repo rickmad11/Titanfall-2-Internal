@@ -1,5 +1,9 @@
 # Titanfall 2 Internal
 
+# Note:
+make sure that you build the project for x64 and in release mode, as the linked libraries are compiled in release mode. Compiling the project in debug mode will lead to linker issues. 
+(you could compile my renderer libraries in debug mode and link them to make it work)
+#
 Works on Npcs and Players (multiplayer)
 
 MadFramework is in testing and is missing a lot of stuff. I'm planning to make a public release of my internal framework whenever it is done. 
