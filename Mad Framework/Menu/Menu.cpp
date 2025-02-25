@@ -319,10 +319,7 @@ void MadFramework::Menu::Cursor() noexcept
 {
 	MadRenderer::TextureManager* pTextureManager = g_pRenderer->GetTextureRenderList();
 
-	static auto s_TextureID = [pTextureManager]() -> int
-		{
-			return pTextureManager->AddTexture(CursorData, sizeof(CursorData));
-		}();
+	static int s_TextureID = pTextureManager->AddTexture(CursorData, sizeof(CursorData));
 
 	POINT mouse_pos;
 	GetCursorPos(&mouse_pos);
