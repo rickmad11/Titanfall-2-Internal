@@ -48,7 +48,8 @@ namespace MadFramework::InterfaceManager
 	}
 
 	template <typename T_INTERFACE>
-	T_INTERFACE* GetInterface() requires !std::is_pointer_v<T_INTERFACE>
+	requires (!std::is_pointer_v<T_INTERFACE>)
+	T_INTERFACE* GetInterface()
 	{
 		if constexpr (std::is_same_v<T_INTERFACE, IBaseClientDLL>)
 		{
