@@ -15,6 +15,7 @@
 #include <cwctype>
 #include <numbers>
 #include <filesystem>
+#include <array>
 
 //DirectX
 #include <d3d11.h>
