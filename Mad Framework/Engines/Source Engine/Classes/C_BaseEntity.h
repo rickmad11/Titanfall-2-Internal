@@ -203,4 +203,5 @@ public:
 	NETVAR_OFFSET(GetLocalOrigin, Vector3, 0x12C)
 	NETVAR_OFFSET(GetCameraPos, Vector3, 0x19A4)
 	NETVAR_OFFSET(GetWeaponSway, Vector3, 0x1E34)
+	NETVAR_OFFSET(GetTitanType, int, 0x4A8)
 };

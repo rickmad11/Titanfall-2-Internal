@@ -269,3 +269,30 @@ void EntityFilledBox(Vector4 screenBaseEntity, MadRenderer::RenderList* pBackGro
 	pBackGroundRenderList->DrawFilledRect({ screenBaseEntity.x - (screenBaseEntity.z * .5f), screenBaseEntity.y - screenBaseEntity.w, screenBaseEntity.z, screenBaseEntity.w},
 		{ static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a) });
 }
+
+void GetTitanBonePos(int iTitanType, MadFramework::Menu::MenuState::AimbotBone target_bone, matrix3x4_t const (&boneMatrix)[256], Vector3& bone_pos)
+{
+	//quick fix for the titans that have such a shit bone structure that my aimbot breaks on them
+	static const std::unordered_map<MadFramework::Menu::MenuState::AimbotBone, int> bone_map_7500
+	{
+		{MadFramework::Menu::MenuState::AimbotBone::Head, 83} , {MadFramework::Menu::MenuState::AimbotBone::Neck, 80},
+		{MadFramework::Menu::MenuState::AimbotBone::Pelvis, 31}
+	};
+
+	static const std::unordered_map<MadFramework::Menu::MenuState::AimbotBone, int> bone_map_12500
+	{
+		{MadFramework::Menu::MenuState::AimbotBone::Head, 26} , {MadFramework::Menu::MenuState::AimbotBone::Neck, 29},
+		{MadFramework::Menu::MenuState::AimbotBone::Pelvis, 90}
+	};
+
+	switch (iTitanType)
+	{
+		case 7500:
+			bone_pos = { boneMatrix[bone_map_7500.at(target_bone)][0][3], boneMatrix[bone_map_7500.at(target_bone)][1][3], boneMatrix[bone_map_7500.at(target_bone)][2][3] };
+			break;
+
+		case 12500:
+			bone_pos = { boneMatrix[bone_map_12500.at(target_bone)][0][3], boneMatrix[bone_map_12500.at(target_bone)][1][3], boneMatrix[bone_map_12500.at(target_bone)][2][3] };
+			break;
+	}
+}
