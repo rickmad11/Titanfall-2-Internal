@@ -57,6 +57,9 @@ namespace MadFramework::Hook
 			PLOG_WARNING << "D3D11CreateDeviceAndSwapChain returned: " << result;
 
 			swap_chain_desc.Windowed = true;
+			swap_chain_desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+			swap_chain_desc.BufferDesc.Width = 100;
+			swap_chain_desc.BufferDesc.Height = 100;
 
 			result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
 				NULL, nullptr, NULL,
