@@ -28,7 +28,7 @@ bool ConfigManager::InitializeConfigManager(std::string_view file_name)
 
 	if(std::filesystem::exists(ini_file_path))
 	{
-		PLOG_INFO << "Config filed found";
+		PLOG_INFO << "Config file found";
 		return false;
 	}
 

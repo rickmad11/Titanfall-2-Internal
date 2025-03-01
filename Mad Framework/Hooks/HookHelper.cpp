@@ -15,6 +15,10 @@ namespace MadFramework::Hook
 			return false;
 		}
 
+		wchar_t window_name_buffer[256] {};
+		int c_length = GetWindowTextW(windowData.windowHandle, window_name_buffer, 256);
+
+		PLOG_INFO << "Window Title: " << ( (c_length > 0) ? window_name_buffer : L" " );
 		PLOG_INFO << "Process ID: " << windowData.processID;
 		PLOG_INFO << "Window Handle: " << windowData.windowHandle;
 
@@ -47,9 +51,27 @@ namespace MadFramework::Hook
 
 		pSwapChain.Reset();
 
+		if (pPresent == nullptr || pResizeBuffers == nullptr)
+		{
+			PLOG_WARNING << "Failed Creating SwapChain retrying...";
+			PLOG_WARNING << "D3D11CreateDeviceAndSwapChain returned: " << result;
+
+			swap_chain_desc.Windowed = true;
+
+			result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr,
+				NULL, nullptr, NULL,
+				D3D11_SDK_VERSION, &swap_chain_desc,
+				pSwapChain.GetAddressOf(), nullptr, nullptr, nullptr);
+
+			pPresent = Memory::GetVTableFunctionAddress(pSwapChain.Get(), 8);
+			pResizeBuffers = Memory::GetVTableFunctionAddress(pSwapChain.Get(), 13);
+		}
+
 		if(pPresent == nullptr || pResizeBuffers == nullptr)
 		{
 			PLOG_ERROR << "Could either not get Present or ResizeBuffers Address Incorrect Vtable Index?";
+			PLOG_ERROR << "D3D11CreateDeviceAndSwapChain returned: " << result;
+			PLOG_ERROR << "Present: " << pPresent << " " << "ResizeBuffers: " << pResizeBuffers;
 			return false;
 		}
 
