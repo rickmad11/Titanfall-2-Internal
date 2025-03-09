@@ -95,7 +95,7 @@ void MadFramework::Menu::Render() noexcept
 	constexpr int groupBoxWidth = static_cast<int>(menuWidth * .313f);
 	constexpr int groupBoxHeight = static_cast<int>(menuHeight * .85f);
 
-	if (zgui::begin_window("Titanfall 2 Internal Public Build v1.0", { menuWidth - 16, menuHeight }, NULL)) {
+	if (zgui::begin_window("Titanfall 2 Internal Public Build v1.1", { menuWidth - 16, menuHeight }, NULL)) {
 
 		zgui::tab_button("Aimbot", { buttonWidth, buttonHeight }, state.aimbotTab);
 
