@@ -229,9 +229,12 @@
     </ClCompile>
     <ClCompile Include="src\AntiScreenshot\Antiscreenshot.cpp" />
     <ClCompile Include="src\Features\Aimbot\Aimbot.cpp" />
+    <ClCompile Include="src\Features\Misc\Movement.cpp" />
     <ClCompile Include="src\Features\Misc\MiscVisuals.cpp" />
     <ClCompile Include="src\Features\Misc\HitSound.cpp" />
     <ClCompile Include="src\Features\Misc\SaveManager.cpp" />
+    <ClCompile Include="src\Features\Misc\Server.cpp" />
+    <ClCompile Include="src\Features\Misc\Skin Changer.cpp" />
     <ClCompile Include="src\Features\Visuals\ESP.cpp" />
     <ClCompile Include="src\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -348,7 +351,10 @@
     <ClInclude Include="src\Features\Misc\HitSound.h" />
     <ClInclude Include="src\Features\Misc\HitSoundFiles.h" />
     <ClInclude Include="src\Features\Misc\MiscVisuals.h" />
+    <ClInclude Include="src\Features\Misc\Movement.hpp" />
     <ClInclude Include="src\Features\Misc\SaveManager.h" />
+    <ClInclude Include="src\Features\Misc\Server.hpp" />
+    <ClInclude Include="src\Features\Misc\Skin Changer.hpp" />
     <ClInclude Include="src\Features\Visuals\ESP.h" />
     <ClInclude Include="src\Features\Visuals\Visuals.h" />
   </ItemGroup>

@@ -13,6 +13,8 @@
 // #===================================================================================#
 
 #include "./zgui.hh"
+
+#include "lib/plog/Log.h"
 using namespace zgui::globals;
 zgui::functions_t zgui::functions;
 zgui::gui_window_context_t zgui::globals::window_ctx;
@@ -1199,5 +1201,205 @@ void zgui::menu_color_options() noexcept
 decltype(global_colors)* zgui::get_menu_colors() noexcept
 {
     return &global_colors;
+}
+// ========================================================================
+void zgui::text_input(const char* id, std::string& value, int control_width, int control_height, const int max_length, const int flags) {
+    std::vector<std::string> id_split = utils::hash::split_str(id, '#');
+
+    const unsigned long font = utils::misc::pop_font();
+
+    const vec2 cursor_pos = utils::misc::pop_cursor_pos();
+    vec2 draw_pos{ window_ctx.position.x + cursor_pos.x + 14, window_ctx.position.y + cursor_pos.y };
+
+    const bool inlined = id_split[0].empty();
+
+    if (!inlined) {
+        int text_width, text_height;
+        functions.get_text_size(font, id_split[0].c_str(), text_width, text_height);
+
+        window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y - 4}, zgui_render_type::zgui_text, global_colors.color_text, id_split[0], vec2{0, 0}, font });
+
+        draw_pos.y += text_height;
+    }
+
+    const bool active = window_ctx.blocking == utils::hash::hash(id);
+    const bool hovered = utils::input::mouse_in_region(draw_pos.x, draw_pos.y, control_width, control_height);
+
+    if (hovered && utils::input::key_pressed(VK_LBUTTON) && !active) {
+        window_ctx.blocking = utils::hash::hash(id);
+    }
+    else if (active) {
+        if (utils::input::key_pressed(VK_ESCAPE) || utils::input::key_pressed(VK_RETURN) || (!hovered && utils::input::key_pressed(VK_LBUTTON))) {
+            window_ctx.blocking = 0;
+        }
+        else if (utils::input::key_pressed(VK_BACK) && !value.empty()) {
+            value.pop_back();
+        }
+        else if (value.length() < max_length) {
+            for (int i = 32; i <= 222; i++) {
+
+                if (i == VK_SPACE && utils::input::key_pressed(VK_SPACE)) {
+                    value += ' ';
+                    continue;
+                }
+
+                if ((i > 32 && i < 48) || (i > 57 && i < 65) || (i > 90 && i < 186))
+                    continue;
+
+                if (i > 57 && i <= 90) {
+                    if (utils::input::key_pressed(i))
+                        value += utils::input::key_down(VK_SHIFT) ? static_cast<char>(i) : static_cast<char>(i + 32);
+                }
+                else {
+                    if (utils::input::key_pressed(i)) {
+                        for (int j = 0; j < sizeof(special_characters); j++) {
+                            if (special_characters[j].vk == i)
+                                value += utils::input::key_down(VK_SHIFT) ? special_characters[j].shift : special_characters[j].regular;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 4, draw_pos.y + 4}, zgui_render_type::zgui_text, global_colors.color_text, flags & zgui_text_input_flags_password ? std::string(value.length(), '*').c_str() : value.c_str(), vec2{0, 0}, font });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 1, draw_pos.y + 1}, zgui_render_type::zgui_filled_rect, active ? global_colors.control_active_or_clicked : global_colors.control_idle, "", {static_cast<float>(control_width) - 2, static_cast<float>(control_height) - 2}});
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y}, zgui_render_type::zgui_filled_rect, global_colors.control_outline, "", {static_cast<float>(control_width), static_cast<float>(control_height)} });
+
+    utils::misc::push_cursor_pos(vec2{ cursor_pos.x + control_width + global_config.item_spacing, cursor_pos.y });
+    utils::misc::push_cursor_pos(vec2{ cursor_pos.x, cursor_pos.y + control_height / 2 + global_config.item_spacing + (inlined ? 0 : 12) });
+
+    utils::misc::push_font(font);
+}
+// ========================================================================
+void zgui::combobox(const char* id, std::vector<std::string> items, int& value, const float control_width, const float control_height) {
+    std::vector<std::string> id_split = utils::hash::split_str(id, '#');
+
+    value = std::clamp(value, 0, static_cast<int>(items.size()) - 1);
+
+    const unsigned long font = utils::misc::pop_font();
+
+    const vec2 cursor_pos = utils::misc::pop_cursor_pos();
+    vec2 draw_pos{ window_ctx.position.x + cursor_pos.x + 14, window_ctx.position.y + cursor_pos.y };
+
+    const bool inlined = id_split[0].empty();
+
+    if (!inlined) {
+        int text_width, text_height;
+
+        functions.get_text_size(font, id_split[0].c_str(), text_width, text_height);
+
+        window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y - 4}, zgui_render_type::zgui_text, global_colors.color_text, id_split[0], vec2{0, 0}, font });
+
+        draw_pos.y += text_height;
+    }
+
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + control_width - 10, draw_pos.y + 4}, zgui_render_type::zgui_text, global_colors.color_text, "+", vec2{0, 0}, font });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 4, draw_pos.y + 4}, zgui_render_type::zgui_text, global_colors.color_text, items.at(value), vec2{0, 0}, font });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 1, draw_pos.y + 1}, zgui_render_type::zgui_filled_rect, global_colors.control_idle, "", {control_width - 2, control_height - 2} });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y}, zgui_render_type::zgui_filled_rect, global_colors.control_outline, "", {control_width, control_height} });
+
+    utils::misc::push_cursor_pos(vec2{ cursor_pos.x + control_width + global_config.item_spacing, cursor_pos.y });
+    utils::misc::push_cursor_pos(vec2{ cursor_pos.x, cursor_pos.y + control_height / 2 + global_config.item_spacing + (inlined ? 0 : 12) });
+
+
+    if (const bool hovered = utils::input::mouse_in_region(draw_pos.x, draw_pos.y, control_width, control_height); hovered && utils::input::key_pressed(VK_LBUTTON) && window_ctx.blocking == 0) {
+        window_ctx.blocking = utils::hash::hash(id);
+    }
+    else if (window_ctx.blocking == utils::hash::hash(id)) {
+        for (int i = 1; i <= items.size(); i++) {
+            bool hovered = utils::input::mouse_in_region(draw_pos.x, draw_pos.y + (control_height - 1) * i, control_width, control_height);
+
+            if (hovered && utils::input::key_pressed(VK_LBUTTON)) {
+                window_ctx.blocking = 0;
+                value = i - 1;
+            }
+
+            if (!hovered && utils::input::key_pressed(VK_LBUTTON)) {
+                window_ctx.blocking = 0;
+            }
+            bool selected = value == i - 1;
+            window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 4, draw_pos.y + (control_height - 1) * i + 4}, zgui_render_type::zgui_text, selected ? global_colors.control_active_or_clicked : global_colors.color_text, items.at(i - 1), vec2{0, 0}, font });
+            window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 1, draw_pos.y + (19 * i) + 1}, zgui_render_type::zgui_filled_rect, hovered ? global_colors.color_combo_bg : global_colors.control_idle, "", {control_width - 2, control_height - 2} });
+            window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y + 19 * i}, zgui_render_type::zgui_filled_rect, global_colors.control_outline, "", {control_width, control_height} });
+        }
+    }
+
+    utils::misc::push_font(font);
+}
+// ========================================================================
+void zgui::multi_combobox(const char* id, std::vector<multi_select_item_thread_safe>& items) {
+    std::vector<std::string> id_split = utils::hash::split_str(id, '#');
+
+    const int control_width = 100;
+    const int control_height = 20;
+
+    const unsigned long font = utils::misc::pop_font();
+
+    const vec2 cursor_pos = utils::misc::pop_cursor_pos();
+    vec2 draw_pos{ window_ctx.position.x + cursor_pos.x + 14, window_ctx.position.y + cursor_pos.y };
+
+    const bool inlined = id_split[0].empty();
+
+    if (!inlined) {
+        int text_width, text_height;
+        functions.get_text_size(font, id_split[0].c_str(), text_width, text_height);
+
+        window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y - 4}, zgui_render_type::zgui_text, global_colors.color_text, id_split[0], vec2{0, 0}, font });
+
+        draw_pos.y += text_height;
+    }
+
+    std::string value_str;
+    int text_width, text_height;
+
+    for (auto& item_t : items) {
+        if (item_t.value) {
+            if (value_str.length() > 0)
+                value_str += ", ";
+
+            value_str += item_t.name;
+        }
+    }
+
+    functions.get_text_size(font, value_str.c_str(), text_width, text_height);
+    if (text_width > control_width - 18) {
+        value_str.resize(control_width / 10);
+        value_str += " ...";
+    }
+    if (!value_str.length())
+        value_str += "None";
+
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + control_width - 10, draw_pos.y + 4}, zgui_render_type::zgui_text, global_colors.color_text, "+", vec2{0, 0}, font });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 4, draw_pos.y + 4}, zgui_render_type::zgui_text, global_colors.color_text, value_str, vec2{0, 0}, font });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 1, draw_pos.y + 1}, zgui_render_type::zgui_filled_rect, global_colors.control_idle, "", {control_width - 2, control_height - 2} });
+    window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y}, zgui_render_type::zgui_filled_rect, global_colors.control_outline, "", {control_width, control_height} });
+
+    utils::misc::push_cursor_pos(vec2{ cursor_pos.x + control_width + global_config.item_spacing, cursor_pos.y });
+    utils::misc::push_cursor_pos(vec2{ cursor_pos.x, cursor_pos.y + control_height / 2 + global_config.item_spacing + (inlined ? 0 : 12) });
+
+
+    if (const bool hovered = utils::input::mouse_in_region(draw_pos.x, draw_pos.y, control_width, control_height); hovered && utils::input::key_pressed(VK_LBUTTON) && window_ctx.blocking == 0) {
+        window_ctx.blocking = utils::hash::hash(id);
+    }
+    else if (window_ctx.blocking == utils::hash::hash(id)) {
+        for (int i = 1; i <= items.size(); i++) {
+            bool hovered = utils::input::mouse_in_region(draw_pos.x, draw_pos.y + (control_height - 1) * i, control_width, control_height);
+            const bool outofbounds = utils::input::mouse_in_region(draw_pos.x, draw_pos.y + (control_height - 1), control_width, control_height * i);
+            if (hovered && utils::input::key_pressed(VK_LBUTTON)) {
+                window_ctx.blocking = utils::hash::hash(id);
+                items[i - 1].value = !items[i - 1].value;
+            }
+            if (!outofbounds && utils::input::key_pressed(VK_LBUTTON)) {
+                window_ctx.blocking = 0;
+            }
+            bool selected = items[i - 1].value >= 1;
+            window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 4, draw_pos.y + (control_height - 1) * i + 4}, zgui_render_type::zgui_text, selected ? global_colors.control_active_or_clicked : global_colors.color_text, items[i - 1].name.data(), vec2{0, 0}, font });
+            window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x + 1, draw_pos.y + (19 * i) + 1}, zgui_render_type::zgui_filled_rect, hovered ? global_colors.color_combo_bg : global_colors.control_idle, "", {control_width - 2, control_height - 2} });
+            window_ctx.render.emplace_back(zgui_control_render_t{ {draw_pos.x, draw_pos.y + 19 * i}, zgui_render_type::zgui_filled_rect, global_colors.control_outline, "", {control_width, control_height} });
+        }
+    }
+
+    utils::misc::push_font(font);
 }
 // ========================================================================

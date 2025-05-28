@@ -16,6 +16,7 @@ namespace MadFramework::Menu
 		bool visualsTab = false;
 		bool miscTab = false;
 		bool settingsTab = false;
+		bool hate_mode = false;
 
 		//Visuals Player
 		bool vPlayers = false;
@@ -31,6 +32,7 @@ namespace MadFramework::Menu
 		bool vPlayer_edge_box = false;
 		bool vPlayer_speed = false;
 		bool vPlayer_FilledBox = false;
+		bool vPlayer_ThickBoxName = false;
 
 		//Visuals World
 		bool vWorld = false;
@@ -47,6 +49,7 @@ namespace MadFramework::Menu
 		bool vEntity_distance = false;
 		bool vGrenades = false;
 		bool vWeapons = false;
+		bool vNpc_ThickBoxName = false;
 
 		//Visuals Settings
 		bool vVisbleCheck = false;
@@ -68,6 +71,8 @@ namespace MadFramework::Menu
 		int aAimlockKey = VK_LBUTTON;
 		bool aAimlockSmooth = false;
 		float aAimlock_smoothness = 0.f;
+		bool aPrediction = false;
+		bool aOnlyCloseRange = false;
 
 		//Misc
 		bool mSpeedExploit = false;
@@ -93,6 +98,20 @@ namespace MadFramework::Menu
 
 		bool mLoadConfig = false;
 		bool mSaveConfig = false;
+		const char* mSelectedConfigName = nullptr; //usage is currently in menu.cpp can be removed from this structure if no use outside of menu is required
+
+		bool bhop = false;
+
+		bool fake_angles = false;
+		bool fake_down_angle = false;
+		bool fake_up_angle = false;
+
+		bool infinite_money = false;
+
+		bool skin_changer = false;
+		int selected_skinID = 0;
+
+		bool log_server_info = false;
 
 		enum AimbotBone : int //Has to map to the bone names vector inside menu, (yes im aware I should really change this)
 		{

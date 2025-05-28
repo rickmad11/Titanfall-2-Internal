@@ -1,6 +1,8 @@
 #include "pch.h"
 
 #include "SaveManager.h"
+
+#include "Skin Changer.hpp"
 #include "Menu/Menu.h"
 
 void SaveSettings() 
@@ -21,6 +23,7 @@ void SaveSettings()
     p_config_manager->AddValue("Visuals", "vPlayer_name", menuState.vPlayer_name);
     p_config_manager->AddValue("Visuals", "vPlayerTeam", menuState.vPlayerTeam);
     p_config_manager->AddValue("Visuals", "vPlayer_health", menuState.vPlayer_health);
+    p_config_manager->AddValue("Visuals", "vPlayer_ThickBoxName", menuState.vPlayer_ThickBoxName);
     p_config_manager->AddValue("Visuals", "vPlayer_distance", menuState.vPlayer_distance);
     p_config_manager->AddValue("Visuals", "vPlayer_weapon_info", menuState.vPlayer_weapon_info);
     p_config_manager->AddValue("Visuals", "vPlayer_health_bar", menuState.vPlayer_health_bar);
@@ -34,6 +37,7 @@ void SaveSettings()
     p_config_manager->AddValue("World", "vNpcs", menuState.vNpcs);
     p_config_manager->AddValue("World", "vNpc_box_2d", menuState.vNpc_box_2d);
     p_config_manager->AddValue("World", "vNpc_name", menuState.vNpc_name);
+    p_config_manager->AddValue("World", "vNpc_ThickBoxName", menuState.vNpc_ThickBoxName);
     p_config_manager->AddValue("World", "vNpc_health", menuState.vNpc_health);
     p_config_manager->AddValue("World", "vNpc_weapon_info", menuState.vNpc_weapon_info);
     p_config_manager->AddValue("World", "vNpc_health_bar", menuState.vNpc_health_bar);
@@ -63,6 +67,10 @@ void SaveSettings()
     p_config_manager->AddValue("Aimbot", "aAimlockKey", menuState.aAimlockKey);
     p_config_manager->AddValue("Aimbot", "aAimlockSmooth", menuState.aAimlockSmooth);
     p_config_manager->AddValue("Aimbot", "aAimlock_smoothness", menuState.aAimlock_smoothness);
+    p_config_manager->AddValue("Aimbot", "aBonePlayer", menuState.aBonePlayer);
+    p_config_manager->AddValue("Aimbot", "aBoneNpc", menuState.aBoneNpc);
+    p_config_manager->AddValue("Aimbot", "aPrediction", menuState.aPrediction);
+    p_config_manager->AddValue("Aimbot", "aOnlyCloseRange", menuState.aOnlyCloseRange);
 
     p_config_manager->AddValue("Misc", "mSpeedExploit", menuState.mSpeedExploit);
     p_config_manager->AddValue("Misc", "mAirstuck", menuState.mAirstuck);
@@ -81,6 +89,13 @@ void SaveSettings()
     p_config_manager->AddValue("Misc", "mFov", menuState.mFov);
     p_config_manager->AddValue("Misc", "mViewmodel_fov", menuState.mViewmodel_fov);
     p_config_manager->AddValue("Misc", "mAutoMelee", menuState.mAutoMelee);
+    p_config_manager->AddValue("Misc", "Bhop", menuState.bhop);
+    p_config_manager->AddValue("Misc", "FakeAngles", menuState.fake_angles);
+    p_config_manager->AddValue("Misc", "FakeDown", menuState.fake_down_angle);
+    p_config_manager->AddValue("Misc", "FakeUp", menuState.fake_up_angle);
+    //p_config_manager->AddValue("Misc", "Infinite_Money", menuState.infinite_money);
+    p_config_manager->AddValue("Misc", "skin_changer", menuState.skin_changer);
+    p_config_manager->AddValue("Misc", "log_server_info", menuState.log_server_info);
 
     p_config_manager->AddValue("MenuColors", "cPlayer_r", MadFramework::Menu::menu_colors.cPlayer.r);
     p_config_manager->AddValue("MenuColors", "cPlayer_g", MadFramework::Menu::menu_colors.cPlayer.g);
@@ -234,6 +249,8 @@ void SaveSettings()
     p_config_manager->AddValue("MainMenuColors", "color_groupbox_header_b", pGlobal_menu_colors->color_groupbox_header.b);
     p_config_manager->AddValue("MainMenuColors", "color_groupbox_header_a", pGlobal_menu_colors->color_groupbox_header.a);
 
+    SaveSkinsToConfig(p_config_manager);
+
 	p_config_manager->End();
 }
 
@@ -242,6 +259,9 @@ void LoadSettings()
     MadFramework::Menu::MenuState& menuState = MadFramework::Menu::state = {};
 
     ConfigManager* p_config_manager = ConfigManager::Get();
+
+    if (!p_config_manager->IsValid())
+        return;
 
     p_config_manager->Begin();
 
@@ -255,6 +275,7 @@ void LoadSettings()
     p_config_manager->GetValue("Visuals", "vPlayer_name", menuState.vPlayer_name);
     p_config_manager->GetValue("Visuals", "vPlayerTeam", menuState.vPlayerTeam);
     p_config_manager->GetValue("Visuals", "vPlayer_health", menuState.vPlayer_health);
+    p_config_manager->GetValue("Visuals", "vPlayer_ThickBoxName", menuState.vPlayer_ThickBoxName);
     p_config_manager->GetValue("Visuals", "vPlayer_distance", menuState.vPlayer_distance);
     p_config_manager->GetValue("Visuals", "vPlayer_weapon_info", menuState.vPlayer_weapon_info);
     p_config_manager->GetValue("Visuals", "vPlayer_health_bar", menuState.vPlayer_health_bar);
@@ -269,6 +290,7 @@ void LoadSettings()
     p_config_manager->GetValue("World", "vNpc_box_2d", menuState.vNpc_box_2d);
     p_config_manager->GetValue("World", "vNpc_name", menuState.vNpc_name);
     p_config_manager->GetValue("World", "vNpc_health", menuState.vNpc_health);
+    p_config_manager->GetValue("World", "vNpc_ThickBoxName", menuState.vNpc_ThickBoxName);
     p_config_manager->GetValue("World", "vNpc_weapon_info", menuState.vNpc_weapon_info);
     p_config_manager->GetValue("World", "vNpc_health_bar", menuState.vNpc_health_bar);
     p_config_manager->GetValue("World", "vNpc_bones", menuState.vNpc_bones);
@@ -297,6 +319,10 @@ void LoadSettings()
     p_config_manager->GetValue("Aimbot", "aAimlockKey", menuState.aAimlockKey);
     p_config_manager->GetValue("Aimbot", "aAimlockSmooth", menuState.aAimlockSmooth);
     p_config_manager->GetValue("Aimbot", "aAimlock_smoothness", menuState.aAimlock_smoothness);
+    p_config_manager->GetValue("Aimbot", "aBonePlayer", menuState.aBonePlayer);
+    p_config_manager->GetValue("Aimbot", "aBoneNpc", menuState.aBoneNpc);
+    p_config_manager->GetValue("Aimbot", "aPrediction", menuState.aPrediction);
+    p_config_manager->GetValue("Aimbot", "aOnlyCloseRange", menuState.aOnlyCloseRange);
 
     p_config_manager->GetValue("Misc", "mSpeedExploit", menuState.mSpeedExploit);
     p_config_manager->GetValue("Misc", "mAirstuck", menuState.mAirstuck);
@@ -315,6 +341,13 @@ void LoadSettings()
     p_config_manager->GetValue("Misc", "mFov", menuState.mFov);
     p_config_manager->GetValue("Misc", "mViewmodel_fov", menuState.mViewmodel_fov);
     p_config_manager->GetValue("Misc", "mAutoMelee", menuState.mAutoMelee);
+    p_config_manager->GetValue("Misc", "Bhop", menuState.bhop);
+    p_config_manager->GetValue("Misc", "FakeAngles", menuState.fake_angles);
+    p_config_manager->GetValue("Misc", "FakeDown", menuState.fake_down_angle);
+    p_config_manager->GetValue("Misc", "FakeUp", menuState.fake_up_angle);
+    //p_config_manager->GetValue("Misc", "Infinite_Money", menuState.infinite_money);
+    p_config_manager->GetValue("Misc", "skin_changer", menuState.skin_changer);
+    p_config_manager->GetValue("Misc", "log_server_info", menuState.log_server_info);
 
     p_config_manager->GetValue("MenuColors", "cPlayer_r", MadFramework::Menu::menu_colors.cPlayer.r);
     p_config_manager->GetValue("MenuColors", "cPlayer_g", MadFramework::Menu::menu_colors.cPlayer.g);
@@ -467,6 +500,8 @@ void LoadSettings()
     p_config_manager->GetValue("MainMenuColors", "color_groupbox_header_g", pGlobal_menu_colors->color_groupbox_header.g);
     p_config_manager->GetValue("MainMenuColors", "color_groupbox_header_b", pGlobal_menu_colors->color_groupbox_header.b);
     p_config_manager->GetValue("MainMenuColors", "color_groupbox_header_a", pGlobal_menu_colors->color_groupbox_header.a);
+
+    LoadSkinsFromConfig(p_config_manager);
 
     p_config_manager->End();
 }

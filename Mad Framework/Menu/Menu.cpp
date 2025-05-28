@@ -2,6 +2,8 @@
 
 #include "Menu.h"
 
+#include "Features/Aimbot/Aimbot.h"
+
 static MadRenderer::RenderList* g_pForegroundRenderList = nullptr;
 static MadRenderer::DX11* g_pRenderer = nullptr;
 
@@ -95,7 +97,7 @@ void MadFramework::Menu::Render() noexcept
 	constexpr int groupBoxWidth = static_cast<int>(menuWidth * .313f);
 	constexpr int groupBoxHeight = static_cast<int>(menuHeight * .85f);
 
-	if (zgui::begin_window("Titanfall 2 Internal Public Build v1.1", { menuWidth - 16, menuHeight }, NULL)) {
+	if (zgui::begin_window("Titanfall 2 Internal Public Build v2.0", { menuWidth - 16, menuHeight }, NULL, zgui::zgui_window_flags_no_ontoggle_animation)) {
 
 		zgui::tab_button("Aimbot", { buttonWidth, buttonHeight }, state.aimbotTab);
 
@@ -142,6 +144,7 @@ void MadFramework::Menu::Render() noexcept
 		if (state.aimbotTab)
 		{
 			static const std::vector<std::string> bone_names{ "Head", "Neck" , "Pelvis"};
+			static std::vector<zgui::multi_select_item_thread_safe> selectable_targest{};
 
 			zgui::begin_groupbox("Players", { groupBoxWidth, groupBoxHeight });
 			{
@@ -150,6 +153,19 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("Aimlock#1", state.aAimlockPlayers);
 
 				zgui::combobox("Aimbot Target Player Bone", bone_names, reinterpret_cast<int&>(state.aBonePlayer));
+
+				for (size_t i = 0; i < 3; i++) 
+					zgui::dummy(); //ghetto fix lol
+
+				zgui::checkbox("Hate Mode", state.hate_mode);
+
+				if (zgui::button("Refresh List", { 120, 20 }))
+					RefreshPlayerList();
+
+				zgui::multi_combobox("Rage On Selected Player", selectable_targest);
+
+				if (state.hate_mode)
+					UpdateHateModeTargets(selectable_targest);
 			}
 			zgui::end_groupbox();
 
@@ -181,6 +197,8 @@ void MadFramework::Menu::Render() noexcept
 				zgui::key_bind("Aimlock Key", state.aAimlockKey);
 				zgui::checkbox("Aimlock enable smoothing", state.aAimlockSmooth);
 				zgui::slider_float("Aimlock smooth", 0.f, 100.f, state.aAimlock_smoothness);
+				zgui::checkbox("Only Close Range", state.aOnlyCloseRange);
+				zgui::checkbox("Aimbot Prediction", state.aPrediction);
 			}
 			zgui::end_groupbox();
 		}
@@ -193,6 +211,7 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("Team ESP", state.vPlayerTeam);
 				zgui::checkbox("2D Box", state.vPlayer_box_2d);
 				zgui::checkbox("Name", state.vPlayer_name);
+				zgui::checkbox("Thick Name Box", state.vPlayer_ThickBoxName);
 				zgui::checkbox("Health", state.vPlayer_health);
 				zgui::checkbox("Health Bar", state.vPlayer_health_bar);
 				zgui::checkbox("Distance", state.vPlayer_distance);
@@ -213,6 +232,7 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("Enable Npc ESP", state.vNpcs);
 				zgui::checkbox("NPC 2D Box", state.vNpc_box_2d);
 				zgui::checkbox("Npc Name", state.vNpc_name);
+				zgui::checkbox("Thick Npc Name Box", state.vNpc_ThickBoxName);
 				zgui::checkbox("Npc Health", state.vNpc_health);
 				zgui::checkbox("Npc Health Bar", state.vNpc_health_bar);
 				zgui::checkbox("Npc Weapon Info", state.vNpc_weapon_info);
@@ -269,7 +289,7 @@ void MadFramework::Menu::Render() noexcept
 			{
 				zgui::checkbox("UnlockAllAchievements", state.mUnlockAllAchievements);
 				zgui::checkbox("SpeedExploit", state.mSpeedExploit);
-				zgui::slider_float("Speed", 0.f, 0.003f, state.mSpeed);
+				zgui::slider_float("Speed", 0.f, 0.01f, state.mSpeed);
 				zgui::checkbox("Airstuck Enable", state.mAirstuck);
 				zgui::key_bind("Airstuck Key", state.mAirstuckKey);
 				zgui::checkbox("Enable Viewmodel Modifiers", state.mViewmodelChanges);
@@ -291,6 +311,25 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("Disable Standard Crosshair", state.mDisableGameCrosshair);
 				zgui::slider_float("Crosshair Size", 0.f, 0.5f, state.mCustomCrosshairSize);
 				zgui::combobox("Crosshair Variants", crosshair_variants, state.mSelectedCrosshairVariant);
+
+				zgui::dummy();
+
+				zgui::checkbox("Bhop Auto Strafe", state.bhop);
+
+				zgui::checkbox("Enable Fake Angles", state.fake_angles);
+				zgui::checkbox("Fake Down", state.fake_down_angle);
+				zgui::checkbox("Fake Up", state.fake_up_angle);
+
+				zgui::dummy();
+
+				zgui::checkbox("Infinite Money", state.infinite_money);
+				zgui::checkbox("Skin Changer", state.skin_changer);
+
+				zgui::slider_int("Skin ID", 0, 10, state.selected_skinID);
+
+				zgui::dummy();
+
+				zgui::checkbox("Server Info Log", state.log_server_info);
 			}
 			zgui::end_groupbox();
 		}
@@ -306,6 +345,76 @@ void MadFramework::Menu::Render() noexcept
 
 				if (zgui::button("Load Config", { 120, 20 }))
 					state.mLoadConfig = true;
+
+				static int selected_config = 0;
+				static std::vector<std::string> config_names{ ConfigManager::default_string };
+
+				//this should also be in the config manager but i dont care about this project anymore so i want this to be quickly finished
+				static bool configs_parsed = false;
+				if (!configs_parsed)
+				{
+					configs_parsed = true;
+
+					std::unordered_set<std::string> _dup(config_names.begin(), config_names.end());
+
+					for (std::string _config : ConfigManager::Get()->GetAllConfigs())
+					{
+						if (_dup.insert(_config).second)
+							config_names.push_back(_config);
+					}
+
+					selected_config = static_cast<int>(config_names.size()) - 1;
+				}
+
+				static std::string config_name = {};
+				zgui::text_input("Config Name", config_name, 200, 20, 32, 0);
+
+				if (zgui::button("Create Config", { 120, 20 }))
+				{
+					config_names.push_back(config_name);
+					++selected_config;
+
+					//This should be a separate function somewhere else also 
+
+					constexpr int min_size = sizeof(".ini") - 1;
+					if (config_names[selected_config].length() > min_size)
+					{
+						if (config_names[selected_config].compare(config_names[selected_config].length() - min_size, min_size, std::string{ ".ini" }))
+						{
+							config_names[selected_config] += ".ini";
+						}
+					}
+					else
+						config_names[selected_config] += ".ini";
+
+					if (!ConfigManager::Get()->InitializeConfigManager(config_names[selected_config]))
+					{
+						PLOG_WARNING << "failed initializing config";
+						config_names.erase(config_names.cbegin() + selected_config - 1);
+						--selected_config;
+					}
+				}
+
+				if (zgui::button("Remove Config", { 120, 20 }))
+				{
+					if (selected_config != 0) //Main Config File no reason to delete it imo
+					{
+						ConfigManager::Get()->RemoveConfigFile();
+						config_names.erase(config_names.cbegin() + selected_config);
+						--selected_config;
+					}
+				}
+
+				if (selected_config > config_names.size() || selected_config < 0)
+					selected_config = static_cast<int>(config_names.size()) - 1;
+
+				state.mSelectedConfigName = config_names[selected_config].c_str();
+
+				if (state.mSelectedConfigName)
+					ConfigManager::Get()->UpdateConfigFile(state.mSelectedConfigName);
+
+				zgui::combobox("Config ComboBox", config_names, selected_config, 150, 20);
+
 			}
 			zgui::end_groupbox();
 		}

@@ -120,6 +120,10 @@ namespace zgui {
       std::string_view name;
       bool *value;
     };
+    struct multi_select_item_thread_safe {
+        std::string name;
+        bool value;
+    };
     // Two dimensional vector.
     struct vec2 {
       float x, y;
@@ -447,4 +451,7 @@ namespace zgui {
     ZGUI_API bool tab_button(const char* id, const vec2 size, bool& value) noexcept;
     ZGUI_API void menu_color_options() noexcept;
     ZGUI_API decltype(globals::global_colors)* get_menu_colors() noexcept;
+    ZGUI_API void text_input(const char* id, std::string& value, int control_width, int control_height, int max_length = 16, int flags = 0);
+    ZGUI_API void combobox(const char* id, std::vector<std::string> items, int& value, const float control_width, const float control_height);
+    ZGUI_API void multi_combobox(const char* id, std::vector<multi_select_item_thread_safe>& items);
 }

@@ -3,9 +3,12 @@
 #include "Source Engine Hooks.h"
 
 #include "Features/Aimbot/Aimbot.h"
+#include "Features/Misc/Movement.hpp"
+#include "Features/Misc/Skin Changer.hpp"
 #include "Features/Visuals/ESP.h"
 #include "Features/Visuals/Visuals.h"
 #include "Menu/Menu.h"
+#include "Features/Misc/Server.hpp"
 
 namespace MadFramework::SourceEngineHooks
 {
@@ -56,20 +59,7 @@ namespace MadFramework::SourceEngineHooks
 					if(menuState.vVisbleCheck && pIEngineTrace)
 					{
 						if ( ( ( *pC_EntitySignifierName == 'p' && pC_EntitySignifierName[1] == 'l' ) || *pC_EntitySignifierName == 'n' ) && pC_BaseEntity->GetLifeState() == 0)
-						{
-							Trace_t trace{};
-							Ray_t ray{};
-
-							CTraceFilter trace_filter{};
-							trace_filter.pBaseEntity = pLocalClientEntity;
-
-							Vector3 trace_end_pos = pC_BaseEntity->GetLocalOrigin() + Vector3 {0, 30, 50 };
-							ray.init(pLocalClientEntity->GetCameraPos(), trace_end_pos);
-
-							pIEngineTrace->TraceRay(ray, TRACE_MASK_SHOT, &trace_filter, &trace);
-
-							local_entity_render_data.isVisible = (trace.fraction > 0.97f);
-						}
+							local_entity_render_data.isVisible = IsVisible(pC_BaseEntity, pLocalClientEntity);
 					}
 
 					if (menuState.vPlayers)
@@ -77,6 +67,9 @@ namespace MadFramework::SourceEngineHooks
 						if (*pC_EntitySignifierName == 'p' && *(pC_EntitySignifierName + 1) == 'l' && pC_BaseEntity->GetLifeState() == 0)
 						{
 							local_entity_render_data.type = EntityRenderData::Player;
+
+							if (pC_BaseEntity->IsPlayerDecoy())
+								continue;
 
 							if (!menuState.vPlayerTeam)
 							{
@@ -164,6 +157,9 @@ namespace MadFramework::SourceEngineHooks
 						if (menuState.vNpcs && *pC_EntitySignifierName == 'n' && pC_BaseEntity->GetLifeState() == 0)
 						{
 							local_entity_render_data.type = EntityRenderData::Npc;
+
+							if (pC_BaseEntity->IsPlayerDecoy())
+								continue;
 
 							if (!menuState.vPlayerTeam)
 							{
@@ -328,6 +324,11 @@ namespace MadFramework::SourceEngineHooks
 
 		Menu::MenuState menuState = Menu::state;
 
+		IVEngineClient* pIVEngineClient = MadFramework::InterfaceManager::GetInterface<IVEngineClient>();
+		IClientEntityList* pIClientEntityList = MadFramework::InterfaceManager::GetInterface<IClientEntityList>();
+
+		const bool is_ingame = pIVEngineClient->IsInGame();
+
 		if(menuState.aPlayers || menuState.aNpcs)
 		{
 			static CGlobalVars* pCGlobalVars = CGlobalVars::Get();
@@ -339,10 +340,7 @@ namespace MadFramework::SourceEngineHooks
 				{Menu::MenuState::AimbotBone::Pelvis, 5}
 			};
 
-			IClientEntityList* pIClientEntityList = MadFramework::InterfaceManager::GetInterface<IClientEntityList>();
-			IVEngineClient* pIVEngineClient = MadFramework::InterfaceManager::GetInterface<IVEngineClient>();
-
-			if (pIVEngineClient->IsInGame())
+			if (is_ingame)
 			{
 				C_BaseEntity* pLocalClientEntity = reinterpret_cast<C_BaseEntity*>(pIClientEntityList->GetClientEntity(pIVEngineClient->GetLocalPlayer()));
 				C_BaseEntity* pTargetEntity = nullptr;
@@ -354,6 +352,8 @@ namespace MadFramework::SourceEngineHooks
 
 				float closest_entity = 99999.f;
 				bool inMeleeRange = false;
+				bool hate_target_found = false;
+				bool in_close_range = false;
 
 				for (int index = 0; index < pIClientEntityList->GetMaxEntities(); index++)
 				{
@@ -378,10 +378,24 @@ namespace MadFramework::SourceEngineHooks
 					if (lpTeamNum == pC_BaseEntity->GetTeamNum())
 						continue;
 
+					if (pC_BaseEntity->IsPlayerDecoy())
+						continue;
+
 					if(menuState.aNpcs)
 					{
 						if (*pC_EntitySignifierName == 'n' && pC_BaseEntity->GetLifeState() == 0)
 						{
+							Vector3 screen_bone {};
+
+							if (menuState.aVisibleCheck || menuState.aInsideFovCircleCheck)
+							{
+								matrix3x4_t boneMatrix[256]{};
+								if (!pC_BaseEntity->SetupBones(&boneMatrix[0], 256, 1024, pCGlobalVars->m_curTime))
+									continue;
+
+								screen_bone = Vector3{ boneMatrix[bone_map.at(menuState.aBoneNpc)][0][3], boneMatrix[bone_map.at(menuState.aBoneNpc)][1][3], boneMatrix[bone_map.at(menuState.aBoneNpc)][2][3] };
+							}
+
 							if(menuState.aIgnoreTitans)
 							{
 								if(pC_BaseEntity->IsTitan())
@@ -390,7 +404,7 @@ namespace MadFramework::SourceEngineHooks
 
 							if(menuState.aVisibleCheck)
 							{
-								if(!IsVisible(pC_BaseEntity, pLocalClientEntity))
+								if(!IsVisible(screen_bone, pLocalClientEntity))
 									continue;
 							}
 
@@ -402,12 +416,6 @@ namespace MadFramework::SourceEngineHooks
 
 							if(menuState.aInsideFovCircleCheck)
 							{
-								matrix3x4_t boneMatrix[256]{};
-								if (!pC_BaseEntity->SetupBones(&boneMatrix[0], 256, 1024, pCGlobalVars->m_curTime))
-									continue;
-
-								Vector3 screen_bone = Vector3{ boneMatrix[bone_map.at(menuState.aBoneNpc)][0][3], boneMatrix[bone_map.at(menuState.aBoneNpc)][1][3], boneMatrix[bone_map.at(menuState.aBoneNpc)][2][3] };
-
 								if (!IsInsideFovCircle(menuState.vFovCircleSize, screen_bone))
 									continue;
 							}
@@ -420,6 +428,9 @@ namespace MadFramework::SourceEngineHooks
 
 								if (distance <= 15.f)
 									inMeleeRange = true;
+
+								if (distance <= 110.f)
+									in_close_range = true;
 							}
 
 							continue;
@@ -428,8 +439,29 @@ namespace MadFramework::SourceEngineHooks
 
 					if(menuState.aPlayers)
 					{
-						if (*pC_EntitySignifierName == 'p' && *(pC_EntitySignifierName + 1) == 'l' && pC_BaseEntity->GetLifeState() == 0)
+						if (menuState.hate_mode && *pC_EntitySignifierName == 'p' && *(pC_EntitySignifierName + 1) == 'l')
 						{
+							player_info_t player_info{};
+							if (pIVEngineClient->GetPlayerInfo(index, &player_info))
+								UpdateHateModePlayerList(player_info.name);
+
+							if (pC_BaseEntity->GetLifeState() == 0)
+								hate_target_found = TryKillSelectedTarget(pC_BaseEntity, pLocalClientEntity, pCGlobalVars, pCUserCmd, player_info.name);
+						}
+
+						if (*pC_EntitySignifierName == 'p' && *(pC_EntitySignifierName + 1) == 'l' && pC_BaseEntity->GetLifeState() == 0) //should be a separate function since this is 1:1 the same code as for npcs lol (I dont rly mind this since I wont work on this game anymore :( )
+						{
+							Vector3 screen_bone{};
+
+							if (menuState.aVisibleCheck || menuState.aInsideFovCircleCheck)
+							{
+								matrix3x4_t boneMatrix[256]{};
+								if (!pC_BaseEntity->SetupBones(&boneMatrix[0], 256, 1024, pCGlobalVars->m_curTime))
+									continue;
+
+								screen_bone = Vector3{ boneMatrix[bone_map.at(menuState.aBoneNpc)][0][3], boneMatrix[bone_map.at(menuState.aBoneNpc)][1][3], boneMatrix[bone_map.at(menuState.aBoneNpc)][2][3] };
+							}
+
 							if (menuState.aIgnoreTitans)
 							{
 								if (pC_BaseEntity->IsTitan())
@@ -438,7 +470,7 @@ namespace MadFramework::SourceEngineHooks
 
 							if (menuState.aVisibleCheck)
 							{
-								if (!IsVisible(pC_BaseEntity, pLocalClientEntity))
+								if (!IsVisible(screen_bone, pLocalClientEntity))
 									continue;
 							}
 
@@ -450,12 +482,6 @@ namespace MadFramework::SourceEngineHooks
 
 							if (menuState.aInsideFovCircleCheck)
 							{
-								matrix3x4_t boneMatrix[256]{};
-								if (!pC_BaseEntity->SetupBones(&boneMatrix[0], 256, 1024, pCGlobalVars->m_curTime))
-									continue;
-							
-								Vector3 screen_bone = Vector3{ boneMatrix[bone_map.at(menuState.aBonePlayer)][0][3], boneMatrix[bone_map.at(menuState.aBonePlayer)][1][3], boneMatrix[bone_map.at(menuState.aBonePlayer)][2][3] };
-							
 								if (!IsInsideFovCircle(menuState.vFovCircleSize, screen_bone))
 									continue;
 							}
@@ -468,6 +494,9 @@ namespace MadFramework::SourceEngineHooks
 
 								if (distance <= 15.f)
 									inMeleeRange = true;
+
+								if (distance <= 110.f)
+									in_close_range = true;
 							}
 
 							continue;
@@ -485,6 +514,9 @@ namespace MadFramework::SourceEngineHooks
 					if (pTargetEntity->SetupBones(&boneMatrix[0], 256, 1024, pCGlobalVars->m_curTime))
 						bones_setup = true;
 
+					if (menuState.aOnlyCloseRange && !in_close_range)
+						bones_setup = false; //skips entire aimbot part then
+
 					if(bones_setup)
 					{
 						if (menuState.aSilentAimNpcs && type == npc)
@@ -494,7 +526,7 @@ namespace MadFramework::SourceEngineHooks
 							if (pTargetEntity->IsTitan())
 								GetTitanBonePos(pTargetEntity->GetTitanType(), menuState.aBoneNpc, boneMatrix, bone_pos);
 
-							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos);
+							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true);
 						}
 
 						if(menuState.aSilentAimPlayers && type == player)
@@ -504,14 +536,12 @@ namespace MadFramework::SourceEngineHooks
 							if (pTargetEntity->IsTitan())
 								GetTitanBonePos(pTargetEntity->GetTitanType(), menuState.aBonePlayer, boneMatrix, bone_pos);
 
-							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos);
+							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false);
 						}
 
 						bool bAimlockKeyPressed = false;
 						if(menuState.aAimlockNpcs || menuState.aAimlockPlayers)
-						{
 							bAimlockKeyPressed = GetAsyncKeyState(menuState.aAimlockKey) & 0x8000;
-						}
 
 						if(menuState.aAimlockPlayers && type == player && bAimlockKeyPressed)
 						{
@@ -521,9 +551,9 @@ namespace MadFramework::SourceEngineHooks
 								GetTitanBonePos(pTargetEntity->GetTitanType(), menuState.aBonePlayer, boneMatrix, bone_pos);
 
 							if(menuState.aAimlockSmooth)
-								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.025f);
+								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.025f, menuState.aPrediction, pTargetEntity, false);
 							else
-								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos);
+								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false);
 						}
 
 						if (menuState.aAimlockNpcs && type == npc && bAimlockKeyPressed)
@@ -534,14 +564,27 @@ namespace MadFramework::SourceEngineHooks
 								GetTitanBonePos(pTargetEntity->GetTitanType(), menuState.aBoneNpc, boneMatrix, bone_pos);
 
 							if (menuState.aAimlockSmooth)
-								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.025f);
+								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.025f, menuState.aPrediction, pTargetEntity, true);
 							else
-								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos);
+								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true);
 						}
 
 						//Should only be used with Silent aim, aimlock and auto aim sucks therefore I won't support it
 						if (menuState.aAutoAttack)
-							pCUserCmd->m_buttons |= 1 << 0;
+						{
+							static int shoot_tick = 0;
+							constexpr int shoot_interval = 1;
+
+							if (shoot_tick++ >= shoot_interval)
+							{
+								pCUserCmd->m_buttons |= 1;
+								shoot_tick = 0;
+							}
+							else
+							{
+								pCUserCmd->m_buttons &= ~1;
+							}
+						}
 
 						if(menuState.aAutoZoom)
 						{
@@ -568,7 +611,7 @@ namespace MadFramework::SourceEngineHooks
 					}
 				}
 
-				if(pTargetEntity == nullptr)
+				if(pTargetEntity == nullptr && hate_target_found)
 				{
 					if (menuState.aAutoZoom && pLocalClientEntity->IsZooming())
 						pCUserCmd->m_buttons |= 1 << 17;
@@ -577,11 +620,33 @@ namespace MadFramework::SourceEngineHooks
 			}
 		}
 
-		if(menuState.mSpeedExploit)
-			pCUserCmd->m_gameTime += menuState.mSpeed;
+		if (is_ingame)
+		{
+			if (menuState.bhop)
+				Bhop(pCUserCmd, reinterpret_cast<C_BaseEntity*>(pIClientEntityList->GetClientEntity(pIVEngineClient->GetLocalPlayer())));
 
-		if(menuState.mAirstuck && GetAsyncKeyState(menuState.mAirstuckKey) & 0x8000)
-			pCUserCmd->m_commandNumber = 0x7FFFFFFF;
+			if (menuState.mSpeedExploit)
+				pCUserCmd->m_gameTime += menuState.mSpeed;
+
+			if (menuState.mAirstuck && GetAsyncKeyState(menuState.mAirstuckKey) & 0x8000)
+				pCUserCmd->m_commandNumber = 0x7FFFFFFF;
+
+			if (menuState.fake_angles)
+				SetupCmdSendHook();
+
+			if (menuState.skin_changer)
+				SkinChanger(reinterpret_cast<C_BaseEntity*>(pIClientEntityList->GetClientEntity(pIVEngineClient->GetLocalPlayer())), menuState.selected_skinID);
+
+			MenuCmdSendFlags(menuState.fake_angles, menuState.fake_down_angle, menuState.fake_up_angle);
+		}
+
+		static void* pGameCurrency = static_cast<BYTE*>(Memory::GetModuleBase(L"engine.dll")) + 0x7A6FA8;
+
+		if (menuState.infinite_money)
+			*static_cast<DWORD*>(pGameCurrency) = 100'000'000;
+
+		if (menuState.log_server_info)
+			HookServerConnectionInfo(Menu::state.log_server_info); //my entire menu state reading/writing is not thread safe, idc at this point
 
 		struct GlobalVars //.rdata //F3 44 0F 59 25 ?? ?? ?? ?? EB
 		{
@@ -607,6 +672,9 @@ namespace MadFramework::SourceEngineHooks
 			pGlobalVars->crosshair_draw_flag = 0;
 		else
 			pGlobalVars->crosshair_draw_flag = 2;
+
+		if (!is_ingame && menuState.hate_mode)
+			RefreshPlayerList();
 
 		return result;
 	}

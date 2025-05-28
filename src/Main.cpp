@@ -3,6 +3,8 @@
 #include "Framework.h"
 #include "AntiScreenshot/Antiscreenshot.h"
 #include "Features/Misc/HitSound.h"
+#include "Features/Misc/Movement.hpp"
+#include "Features/Misc/Server.hpp"
 #include "Hooks/HookHelper.h"
 #include "Hooks/DirectX11/DirectX11 Hooks.h"
 #include "Hooks/Source Engine/Source Engine Hooks.h"
@@ -18,7 +20,7 @@ DWORD WINAPI ThreadEntry(LPVOID lpThreadParameter)
 
     PLOG_INFO << "Console Initialized!";
 
-    if (!ConfigManager::Get()->InitializeConfigManager("RM11_TF2_Config.ini") && ConfigManager::Get()->HasFailed())
+    if (!ConfigManager::Get()->InitializeConfigManager(ConfigManager::default_string) && ConfigManager::Get()->HasFailed())
         PLOG_WARNING << "Config error (this can be ignored if you don't care about saving your settings)";
 
     if (!CLC_ScreenshotFunctionsHook())
@@ -108,6 +110,8 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD fdwReason, LPVOID lpvReserved)
         MadFramework::FrameworkExit();
         DisableCLC_ScreenshotFunctionsHook();
         DisableUserMessageHook();
+        RemoveCmdSendHook();
+        RemoveServerConnectionHook();
     }
 
     return TRUE;  

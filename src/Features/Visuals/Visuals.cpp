@@ -29,6 +29,9 @@ void MainVisuals() {
 
 				if (menuState.vPlayer_name)
 				{
+					if (menuState.vPlayer_ThickBoxName)
+						DrawBlackNameBlock(render_data.screenBasePosition, render_data.name.c_str(), pBackGroundRenderList);
+
 					if (menuState.vVisbleCheck)
 						EntityName(render_data.screenBasePosition, render_data.name.c_str(), pBackGroundRenderList, render_data.isVisible ? MadFramework::Menu::menu_colors.cPlayerName : MadFramework::Menu::menu_colors.cInvPlayerName);
 					else
@@ -94,6 +97,9 @@ void MainVisuals() {
 
 					if (menuState.vNpc_name)
 					{
+						if (menuState.vNpc_ThickBoxName)
+							DrawBlackNameBlock(render_data.screenBasePosition, render_data.name.c_str(), pBackGroundRenderList);
+
 						if (menuState.vVisbleCheck)
 							EntityName(render_data.screenBasePosition, render_data.name.c_str(), pBackGroundRenderList, render_data.isVisible ? MadFramework::Menu::menu_colors.cNpcName : MadFramework::Menu::menu_colors.cInvNpcName);
 						else

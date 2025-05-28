@@ -28,3 +28,12 @@ bool C_BaseEntity::IsPlayer() noexcept
 	return pfIsPlayer(this);
 }
 
+bool C_BaseEntity::IsPlayerDecoy() noexcept
+{
+	return MadFramework::Memory::InvokeVTableFunction<bool>(this, 0x9D);
+}
+
+bool C_BaseEntity::IsNpc() noexcept
+{
+	return MadFramework::Memory::InvokeVTableFunction<bool>(this, 0x9C);
+}

@@ -296,3 +296,11 @@ void GetTitanBonePos(int iTitanType, MadFramework::Menu::MenuState::AimbotBone t
 			break;
 	}
 }
+
+void DrawBlackNameBlock(Vector4 screenBaseEntity, const char* pText, MadRenderer::RenderList* pBackGroundRenderList)
+{
+	float x = screenBaseEntity.x - (pBackGroundRenderList->MeasureString(pText).x * 0.5f);
+	float y = screenBaseEntity.y - (screenBaseEntity.w + pBackGroundRenderList->MeasureString(pText).y * g_visuals_text_scale);
+
+	pBackGroundRenderList->DrawFilledRect({ x, y, pBackGroundRenderList->MeasureString(pText).x * g_visuals_text_scale, pBackGroundRenderList->MeasureString(pText).y * g_visuals_text_scale }, { 0, 0, 0, 225 });
+}

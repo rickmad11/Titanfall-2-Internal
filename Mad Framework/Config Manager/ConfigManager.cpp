@@ -8,8 +8,41 @@ ConfigManager* ConfigManager::Get() noexcept
 	return &pConfigManager;
 }
 
+std::vector<std::string> ConfigManager::GetAllConfigs() noexcept
+{
+	std::vector<std::string> configs;
+
+	if (std::filesystem::exists(app_data_file_path))
+	{
+		for (const auto& file : std::filesystem::directory_iterator(app_data_file_path))
+			if (file.path().extension() == ".ini")
+				configs.push_back(file.path().filename().string());
+	}
+
+	return configs;
+}
+
+bool ConfigManager::IsValid() const noexcept
+{
+	return std::filesystem::file_size(ini_file_path);
+}
+
+void ConfigManager::UpdateConfigFile(const char* config_file_name) noexcept
+{
+	if (config_file_name)
+		ini_file_path = app_data_file_path / std::string{ config_file_name };
+}
+
+void ConfigManager::RemoveConfigFile() const noexcept
+{
+	std::filesystem::remove(ini_file_path);
+}
+
 bool ConfigManager::InitializeConfigManager(std::string_view file_name)
 {
+	if (file_name == ini_file_name)
+		return true;
+
 	ini_file_name = file_name;
 
 	WCHAR path[MAX_PATH] {};
@@ -29,7 +62,7 @@ bool ConfigManager::InitializeConfigManager(std::string_view file_name)
 	if(std::filesystem::exists(ini_file_path))
 	{
 		PLOG_INFO << "Config file found";
-		return false;
+		return true;
 	}
 
 	if(!std::filesystem::exists(app_data_file_path))
@@ -39,7 +72,7 @@ bool ConfigManager::InitializeConfigManager(std::string_view file_name)
 	}
 
 	mINI::INIFile ini_file { ini_file_path.string() };
-
+	
 	if(!ini_file.generate(ini_file_data, true))
 	{
 		PLOG_ERROR << "Failed Creating Ini File";

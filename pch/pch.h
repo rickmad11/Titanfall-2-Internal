@@ -16,6 +16,8 @@
 #include <numbers>
 #include <filesystem>
 #include <array>
+#include <unordered_set>
+#include <random>
 
 //DirectX
 #include <d3d11.h>

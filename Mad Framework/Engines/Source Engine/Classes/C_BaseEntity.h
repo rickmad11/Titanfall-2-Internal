@@ -162,7 +162,7 @@ public:
 	virtual bool					IsAlive(void) = 0;
 	virtual bool					IsBaseCombatCharacter(void) = 0;
 	virtual C_BaseCombatCharacter* MyCombatCharacterPointer(void) = 0;
-	virtual bool					IsNPC(void) = 0;
+	//virtual bool					IsNPC(void) = 0;
 	virtual bool					IsNextBot() = 0;
 	virtual bool					IsBaseObject(void) const = 0;
 	virtual bool					IsBaseCombatWeapon(void) const = 0;
@@ -192,6 +192,8 @@ public:
 	class CWeapon* GetActiveWeapon() noexcept;
 	bool IsTitan() noexcept;
 	bool IsPlayer() noexcept;
+	bool IsPlayerDecoy() noexcept;
+	bool IsNpc() noexcept;
 
 public:
 	NETVAR(GetTeamNum, int, "CPlayer", "m_iTeamNum")
@@ -201,7 +203,9 @@ public:
 	NETVAR(GetLifeState, int, "CPlayer", "m_lifeState")
 	NETVAR(IsZooming, bool, "CPlayer", "m_bZooming")
 	NETVAR_OFFSET(GetLocalOrigin, Vector3, 0x12C)
+	NETVAR_OFFSET(GetVelocity, Vector3, 0x3C0)
 	NETVAR_OFFSET(GetCameraPos, Vector3, 0x19A4)
 	NETVAR_OFFSET(GetWeaponSway, Vector3, 0x1E34)
 	NETVAR_OFFSET(GetTitanType, int, 0x4A8)
+	NETVAR_OFFSET(IsInAir, bool, 0x38C)
 };

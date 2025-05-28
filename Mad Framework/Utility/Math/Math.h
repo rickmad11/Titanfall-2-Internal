@@ -18,4 +18,5 @@ namespace MadFramework::Math
 	Vector2 CalcAngles(Vector3 from, Vector3 to, float pitch_min, float pitch_max, float yaw_min, float yaw_max, Vector2 weapon_sway) noexcept;
 	Vector2 CalcAngles(Vector3 from, Vector3 to, Vector2 weapon_sway) noexcept;
 	Vector2 Lerp(const Vector2& start_angle, const Vector2& end_angle, float smooth) noexcept;
+	Vector3 PredictProjectilePosition(Vector3 vLocalPosition, Vector3 vTargetPosition, Vector3 vTargetVelocity, float projectile_speed, float gravity) noexcept;
 }

@@ -171,4 +171,21 @@ namespace MadFramework::Math
 	{
 		return start_angle + (end_angle - start_angle) * smooth;
 	}
+
+	Vector3 PredictProjectilePosition(Vector3 vLocalPosition, Vector3 vTargetPosition, Vector3 vTargetVelocity, float projectile_speed, float gravity) noexcept
+	{
+		Vector3 predicted_position = vTargetPosition;
+
+		if (projectile_speed != 0)
+		{
+			float travel_time = vLocalPosition.Distance(vTargetPosition) / projectile_speed;
+
+			if (gravity > 1)
+				predicted_position.z += (gravity * 0.5f) * (travel_time * travel_time);
+
+			predicted_position += vTargetVelocity * travel_time;
+		}
+
+		return predicted_position;
+	}
 }
