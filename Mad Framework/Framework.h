@@ -6,7 +6,7 @@ namespace MadFramework
 	struct RenderControlFlags
 	{
 		bool isTakingScreenshot = false;
-		bool isMenuOpen = false;
+		bool isMenuOpen = true;
 	}inline RenderCFs {};
 
 	inline bool g_running_flag = true;

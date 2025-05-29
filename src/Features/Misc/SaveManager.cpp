@@ -97,6 +97,8 @@ void SaveSettings()
     p_config_manager->AddValue("Misc", "skin_changer", menuState.skin_changer);
     p_config_manager->AddValue("Misc", "log_server_info", menuState.log_server_info);
 
+    p_config_manager->AddValue("Settings", "MenuOpenKey", MadFramework::Menu::config.MenuOpenKey);
+
     p_config_manager->AddValue("MenuColors", "cPlayer_r", MadFramework::Menu::menu_colors.cPlayer.r);
     p_config_manager->AddValue("MenuColors", "cPlayer_g", MadFramework::Menu::menu_colors.cPlayer.g);
     p_config_manager->AddValue("MenuColors", "cPlayer_b", MadFramework::Menu::menu_colors.cPlayer.b);
@@ -348,6 +350,8 @@ void LoadSettings()
     //p_config_manager->GetValue("Misc", "Infinite_Money", menuState.infinite_money);
     p_config_manager->GetValue("Misc", "skin_changer", menuState.skin_changer);
     p_config_manager->GetValue("Misc", "log_server_info", menuState.log_server_info);
+
+    p_config_manager->GetValue("Settings", "MenuOpenKey", MadFramework::Menu::config.MenuOpenKey);
 
     p_config_manager->GetValue("MenuColors", "cPlayer_r", MadFramework::Menu::menu_colors.cPlayer.r);
     p_config_manager->GetValue("MenuColors", "cPlayer_g", MadFramework::Menu::menu_colors.cPlayer.g);

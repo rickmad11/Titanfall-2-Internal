@@ -97,6 +97,19 @@ void MadFramework::Menu::Render() noexcept
 	constexpr int groupBoxWidth = static_cast<int>(menuWidth * .313f);
 	constexpr int groupBoxHeight = static_cast<int>(menuHeight * .85f);
 
+	static bool init = false;
+	//Spawn Menu Centered
+	if (!init)
+	{
+		zgui::globals::window_ctx.position = zgui::vec2
+		{
+			(static_cast<float>(MadRenderer::DX11::Get()->windowWidth) * 0.5f) - (menuWidth * 0.5f),
+			(static_cast<float>(MadRenderer::DX11::Get()->windowHeight) * 0.5f) - (menuHeight * 0.5f)
+		};
+
+		init = true;
+	}
+
 	if (zgui::begin_window("Titanfall 2 Internal Public Build v2.0", { menuWidth - 16, menuHeight }, NULL, zgui::zgui_window_flags_no_ontoggle_animation)) {
 
 		zgui::tab_button("Aimbot", { buttonWidth, buttonHeight }, state.aimbotTab);
@@ -415,6 +428,10 @@ void MadFramework::Menu::Render() noexcept
 
 				zgui::combobox("Config ComboBox", config_names, selected_config, 150, 20);
 
+				zgui::next_column(174, 18);
+				zgui::dummy();
+
+				zgui::key_bind("Menu Open/Close Key", reinterpret_cast<int&>(config.MenuOpenKey));
 			}
 			zgui::end_groupbox();
 		}

@@ -23,6 +23,35 @@ namespace MadFramework::WindowsHooks
 				if(wParam == Menu::config.PanicKey)
 					MadFramework::Exit();
 					break;
+
+			case WM_SYSCOMMAND:
+			case WM_WINDOWPOSCHANGED:
+			case WM_WINDOWPOSCHANGING:
+			case WM_NCACTIVATE:
+			case WM_SIZE:
+			case WM_QUERYOPEN:
+			case WM_PAINT:
+			case WM_ACTIVATE:
+			case WA_INACTIVE:
+			case WM_SETFOCUS:
+			case WM_KILLFOCUS:
+			case WM_MOUSEACTIVATE:
+			case WM_NCHITTEST:
+			case WM_NCLBUTTONDOWN:
+			case WM_NCMOUSEMOVE:
+			case WM_NCLBUTTONUP:
+			case WM_NCLBUTTONDBLCLK:
+			case WM_NCRBUTTONDOWN:
+			case WM_ACTIVATEAPP:
+			case WM_GETICON:
+			case WM_NCPAINT:
+			case WM_NCCALCSIZE:
+			case WM_ERASEBKGND:
+			case WM_MOVE:
+				{
+					if (RenderCFs.isMenuOpen)
+						return CallWindowProcW(pWindowProc, hWnd, Msg, wParam, lParam);
+				}
 		}
 
 		if (RenderCFs.isMenuOpen)
