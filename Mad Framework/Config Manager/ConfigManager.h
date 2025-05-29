@@ -16,6 +16,7 @@ private:
 public:
 	static ConfigManager* Get() noexcept;
 	std::vector<std::string> GetAllConfigs() noexcept;
+	std::string GetCurrentConfigFile() const noexcept;
 	bool IsValid() const noexcept;
 	void UpdateConfigFile(const char* config_file_name) noexcept;
 	void RemoveConfigFile() const noexcept;

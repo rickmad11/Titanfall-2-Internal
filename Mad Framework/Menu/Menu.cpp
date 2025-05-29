@@ -3,6 +3,7 @@
 #include "Menu.h"
 
 #include "Features/Aimbot/Aimbot.h"
+#include "Features/Misc/SaveManager.h"
 
 static MadRenderer::RenderList* g_pForegroundRenderList = nullptr;
 static MadRenderer::DX11* g_pRenderer = nullptr;
@@ -106,6 +107,8 @@ void MadFramework::Menu::Render() noexcept
 			(static_cast<float>(MadRenderer::DX11::Get()->windowWidth) * 0.5f) - (menuWidth * 0.5f),
 			(static_cast<float>(MadRenderer::DX11::Get()->windowHeight) * 0.5f) - (menuHeight * 0.5f)
 		};
+
+		LoadMenuKeyBind();
 
 		init = true;
 	}
@@ -432,6 +435,9 @@ void MadFramework::Menu::Render() noexcept
 				zgui::dummy();
 
 				zgui::key_bind("Menu Open/Close Key", reinterpret_cast<int&>(config.MenuOpenKey));
+
+				if (zgui::button("Save Keybind", { 120, 20 }))
+					SaveMenuKeyBind(config.MenuOpenKey);
 			}
 			zgui::end_groupbox();
 		}

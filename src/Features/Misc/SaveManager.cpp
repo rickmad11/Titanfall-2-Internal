@@ -509,3 +509,33 @@ void LoadSettings()
 
     p_config_manager->End();
 }
+
+void SaveMenuKeyBind(std::size_t key_code)
+{
+    ConfigManager* p_config_manager = ConfigManager::Get();
+
+    std::string current_save_file = p_config_manager->GetCurrentConfigFile();
+
+    p_config_manager->InitializeConfigManager(ConfigManager::default_string);
+
+    p_config_manager->Begin();
+    p_config_manager->AddValue("Settings", "MenuOpenKey", key_code);
+    p_config_manager->End();
+
+    p_config_manager->InitializeConfigManager(current_save_file);
+}
+
+void LoadMenuKeyBind()
+{
+    ConfigManager* p_config_manager = ConfigManager::Get();
+
+    std::string current_save_file = p_config_manager->GetCurrentConfigFile();
+
+    p_config_manager->InitializeConfigManager(ConfigManager::default_string);
+
+    p_config_manager->Begin();
+    p_config_manager->GetValue("Settings", "MenuOpenKey", MadFramework::Menu::config.MenuOpenKey);
+    p_config_manager->End();
+
+    p_config_manager->InitializeConfigManager(current_save_file);
+}

@@ -22,6 +22,11 @@ std::vector<std::string> ConfigManager::GetAllConfigs() noexcept
 	return configs;
 }
 
+std::string ConfigManager::GetCurrentConfigFile() const noexcept
+{
+	return ini_file_path.string();
+}
+
 bool ConfigManager::IsValid() const noexcept
 {
 	return std::filesystem::file_size(ini_file_path);
