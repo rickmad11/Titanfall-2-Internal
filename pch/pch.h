@@ -18,6 +18,9 @@
 #include <array>
 #include <unordered_set>
 #include <random>
+#include <expected>
+#include <unordered_map>
+#include <mutex>
 
 //DirectX
 #include <d3d11.h>
