@@ -15,7 +15,7 @@ LogManager* LogManager::Get() noexcept
 
 bool LogManager::InitializeLogConsole() noexcept
 {
-    if(AllocConsole() == 0)
+    if (GetConsoleWindow() == nullptr && AllocConsole() == 0)
     {
         MessageBoxW(nullptr, L"Console Allocation Error", L"LogManager ERROR", MB_OKCANCEL | MB_ICONWARNING);
         return false;

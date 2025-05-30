@@ -208,4 +208,5 @@ public:
 	NETVAR_OFFSET(GetWeaponSway, Vector3, 0x1E34)
 	NETVAR_OFFSET(GetTitanType, int, 0x4A8)
 	NETVAR_OFFSET(IsInAir, bool, 0x38C)
+	NETVAR_OFFSET_STRING(GetTitanName, const char*, 0x30C0)
 };

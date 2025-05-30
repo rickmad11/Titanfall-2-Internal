@@ -17,6 +17,11 @@
 	return reinterpret_cast<type *>(reinterpret_cast<std::uintptr_t>(this) + nOffset); \
 }
 
+#define NETVAR_OFFSET_STRING(_name, type, offset) inline type _name() \
+{ \
+	return reinterpret_cast<type>(reinterpret_cast<std::uintptr_t>(this) + offset); \
+}
+
 namespace MadFramework::NetVarManager
 {
 	int GetNetVar(const char* TableName, const char* NetVarName);

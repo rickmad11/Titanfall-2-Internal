@@ -270,30 +270,40 @@ void EntityFilledBox(Vector4 screenBaseEntity, MadRenderer::RenderList* pBackGro
 		{ static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a) });
 }
 
-void GetTitanBonePos(int iTitanType, MadFramework::Menu::MenuState::AimbotBone target_bone, matrix3x4_t const (&boneMatrix)[256], Vector3& bone_pos)
+void GetTitanBonePos(std::string sTitanName, MadFramework::Menu::MenuState::AimbotBone target_bone, matrix3x4_t const (&boneMatrix)[256], Vector3& bone_pos)
 {
-	//quick fix for the titans that have such a shit bone structure that my aimbot breaks on them
-	static const std::unordered_map<MadFramework::Menu::MenuState::AimbotBone, int> bone_map_7500
+	struct TitanData
 	{
-		{MadFramework::Menu::MenuState::AimbotBone::Head, 83} , {MadFramework::Menu::MenuState::AimbotBone::Neck, 80},
-		{MadFramework::Menu::MenuState::AimbotBone::Pelvis, 31}
+		std::string name {};
+		int bones[3] {}; //0 head, 1 neck, 2 pelvis
 	};
 
-	static const std::unordered_map<MadFramework::Menu::MenuState::AimbotBone, int> bone_map_12500
+	static const std::array<TitanData, 7> titan_bone_array
 	{
-		{MadFramework::Menu::MenuState::AimbotBone::Head, 26} , {MadFramework::Menu::MenuState::AimbotBone::Neck, 29},
-		{MadFramework::Menu::MenuState::AimbotBone::Pelvis, 90}
+		{
+			{"Tone", 83, 16, 7},
+			{"Monarch", 80, 87, 6},
+			{"Scorch", 83, 29, 6},
+			{"Ronin", 93, 85, 3},
+			{"Northstar", 78, 83, 14},
+			{"Ion", 25, 90, 5},
+			{"Legion", 26, 29, 3}
+		}
 	};
 
-	switch (iTitanType)
+	if (!sTitanName.empty())
 	{
-		case 7500:
-			bone_pos = { boneMatrix[bone_map_7500.at(target_bone)][0][3], boneMatrix[bone_map_7500.at(target_bone)][1][3], boneMatrix[bone_map_7500.at(target_bone)][2][3] };
-			break;
-
-		case 12500:
-			bone_pos = { boneMatrix[bone_map_12500.at(target_bone)][0][3], boneMatrix[bone_map_12500.at(target_bone)][1][3], boneMatrix[bone_map_12500.at(target_bone)][2][3] };
-			break;
+		for (TitanData const& titan : titan_bone_array)
+		{
+			if (titan.name.compare(sTitanName) == 0)
+			{
+				if (target_bone <= 2)
+				{
+					const int bone_id = titan.bones[target_bone];
+					bone_pos = { boneMatrix[bone_id][0][3], boneMatrix[bone_id][1][3], boneMatrix[bone_id][2][3] };
+				}
+			}
+		}
 	}
 }
 
