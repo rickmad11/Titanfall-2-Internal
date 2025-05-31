@@ -21,6 +21,7 @@
 #include <expected>
 #include <unordered_map>
 #include <mutex>
+#include <regex>
 
 //DirectX
 #include <d3d11.h>

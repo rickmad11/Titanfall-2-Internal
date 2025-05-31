@@ -90,6 +90,35 @@ namespace MadFramework::Math::SourceEngine
 
 		return false;
 	}
+
+	void WorldToScreenNoChecks(Vector3& entity_position) noexcept
+	{
+		if (g_pViewMatrix)
+		{
+			bool behind = false;
+
+			const float(*m)[4] = g_pViewMatrix->m;
+
+			const float w = m[3][0] * entity_position.x + m[3][1] * entity_position.y + m[3][2] * entity_position.z + m[3][3];
+
+			if (w < 0.0001f)
+				behind = true;
+
+			float x = m[0][0] * entity_position.x + m[0][1] * entity_position.y + m[0][2] * entity_position.z + m[0][3];
+			float y = m[1][0] * entity_position.x + m[1][1] * entity_position.y + m[1][2] * entity_position.z + m[1][3];
+
+			const float inverseW = 1.f / (behind ? -w : w);
+
+			x *= inverseW;
+			y *= inverseW;
+
+			x = (.5f * x) * (gScreenWidth + .5f) + (gScreenWidth * .5f);
+			y = (gScreenHeight * .5f) - ((.5f * y) * (gScreenHeight + .5f));
+
+			entity_position.x = x;
+			entity_position.y = y;
+		}
+	}
 }
 #endif
 

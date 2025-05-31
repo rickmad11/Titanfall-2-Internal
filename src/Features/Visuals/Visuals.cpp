@@ -165,6 +165,21 @@ void MainVisuals() {
 		entity_render_data.clear();
 	}
 
+	if (menuState.vPlayers && menuState.vPlayer_OOFArrow)
+	{
+		std::lock_guard<std::mutex> lock(render_mutex_oof_arrow);
+
+		MadRenderer::RenderList* pBackGroundRenderList = MadRenderer::DX11::Get()->GetBackGroundRenderList();
+
+		for (EntityRenderDataOOFArrow const& render_data : entity_render_data_oof_arrow)
+		{
+			auto color = render_data.is_visible ? MadFramework::Menu::menu_colors.cPlayerOOFArrow : MadFramework::Menu::menu_colors.cInvPlayerOOFArrow;
+			DrawOOFArrow(render_data.screenBasePosition, menuState.vOOFArrow_Radius, color, pBackGroundRenderList);
+		}
+
+		entity_render_data_oof_arrow.clear();
+	}
+
 	if(menuState.vDrawFovCircle)
 		DrawFovCircle(MadFramework::Menu::menu_colors.cFovCircle, menuState.vFovCircleSize);
 

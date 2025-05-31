@@ -66,6 +66,20 @@ bool GetTitan2DBounds(C_BaseEntity* pC_BaseEntity, Vector4& out)
 	return true;
 }
 
+void GetEntity2DBoundsNoWTSCheck(C_BaseEntity* pC_BaseEntity, Vector4& out)
+{
+	Vector3 entity_origin = pC_BaseEntity->GetLocalOrigin();
+	Vector3 entity_head = entity_origin - Vector3{ 0, 0, -70 };
+
+	MadFramework::Math::SourceEngine::WorldToScreenNoChecks(entity_origin);
+	MadFramework::Math::SourceEngine::WorldToScreenNoChecks(entity_head);
+
+	const float entity_height = entity_origin.y - entity_head.y;
+	const float entity_width = entity_height * .5f;
+
+	out = Vector4{ entity_origin.x, entity_origin.y, entity_width, entity_height };
+}
+
 void Entity2dBox(Vector4 screenBaseEntity, MadRenderer::RenderList* pBackGroundRenderList)
 {
 	pBackGroundRenderList->DrawRect({ screenBaseEntity.x - (screenBaseEntity.z * .5f), screenBaseEntity.y - screenBaseEntity.w, screenBaseEntity.z, screenBaseEntity.w }, { 255, 255, 255, 255 }, {0, 0, 0, 255});
@@ -281,11 +295,11 @@ void GetTitanBonePos(std::string sTitanName, MadFramework::Menu::MenuState::Aimb
 	static const std::array<TitanData, 7> titan_bone_array
 	{
 		{
-			{"Tone", 83, 16, 7},
-			{"Monarch", 80, 87, 6},
+			{"Tone", 14, 16, 7},
+			{"Monarch", 14, 87, 6},
 			{"Scorch", 83, 29, 6},
 			{"Ronin", 93, 85, 3},
-			{"Northstar", 78, 83, 14},
+			{"Northstar", 20, 83, 14},
 			{"Ion", 25, 90, 5},
 			{"Legion", 26, 29, 3}
 		}
@@ -313,4 +327,10 @@ void DrawBlackNameBlock(Vector4 screenBaseEntity, const char* pText, MadRenderer
 	float y = screenBaseEntity.y - (screenBaseEntity.w + pBackGroundRenderList->MeasureString(pText).y * g_visuals_text_scale);
 
 	pBackGroundRenderList->DrawFilledRect({ x, y, pBackGroundRenderList->MeasureString(pText).x * g_visuals_text_scale, pBackGroundRenderList->MeasureString(pText).y * g_visuals_text_scale }, { 0, 0, 0, 225 });
+}
+
+void DrawOOFArrow(Vector4 screenBaseEntity, float radius, zgui::color color, MadRenderer::RenderList* pBackGroundRenderList)
+{
+	pBackGroundRenderList->DrawArrow({ screenBaseEntity.x, screenBaseEntity.y }, radius,
+		{ static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a) });
 }

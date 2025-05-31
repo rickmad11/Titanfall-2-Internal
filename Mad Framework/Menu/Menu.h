@@ -33,6 +33,8 @@ namespace MadFramework::Menu
 		bool vPlayer_speed = false;
 		bool vPlayer_FilledBox = false;
 		bool vPlayer_ThickBoxName = false;
+		bool vPlayer_OOFArrow = false;
+		float vOOFArrow_Radius = 100.f;
 
 		//Visuals World
 		bool vWorld = false;
@@ -112,6 +114,7 @@ namespace MadFramework::Menu
 		int selected_skinID = 0;
 
 		bool log_server_info = false;
+		bool log_current_server_info = false;
 
 		enum AimbotBone : int //Has to map to the bone names vector inside menu, (yes im aware I should really change this)
 		{
@@ -133,11 +136,13 @@ namespace MadFramework::Menu
 		zgui::color cNpcFilledBox{ 255, 255, 255, 100 };
 		zgui::color cPlayerName{ 255, 255, 255, 255 };
 		zgui::color cPlayerFilledBox{ 255, 255, 255, 100 };
+		zgui::color cPlayerOOFArrow{ 255, 255, 255, 255 };
 
 		//Not Visible
 		zgui::color cInvPlayer{ 255, 3, 3, 255 };
 		zgui::color cInvPlayerBones{ 255, 3, 3, 255 };
 		zgui::color cInvPlayerFilledBox{ 255, 3, 3, 100 };
+		zgui::color cInvPlayerOOFArrow{ 255, 3, 3, 255 };
 		zgui::color cInvNpc{ 255, 3, 3, 255 };
 		zgui::color cInvNpcBones{ 255, 3, 3, 255 };
 		zgui::color cInvNpcName{ 255, 3, 3, 255 };

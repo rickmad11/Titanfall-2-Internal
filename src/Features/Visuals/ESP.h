@@ -25,3 +25,5 @@ void DrawPlayerSpeed(float player_speed, Vector4 screenBaseEntity, MadRenderer::
 void EntityFilledBox(Vector4 screenBaseEntity, MadRenderer::RenderList* pBackGroundRenderList, zgui::color color);
 void GetTitanBonePos(std::string sTitanName, MadFramework::Menu::MenuState::AimbotBone target_bone, matrix3x4_t const (&boneMatrix)[256], Vector3& bone_pos);
 void DrawBlackNameBlock(Vector4 screenBaseEntity, const char* pText, MadRenderer::RenderList* pBackGroundRenderList);
+void DrawOOFArrow(Vector4 screenBaseEntity, float radius, zgui::color color, MadRenderer::RenderList* pBackGroundRenderList);
+void GetEntity2DBoundsNoWTSCheck(C_BaseEntity* pC_BaseEntity, Vector4& out);

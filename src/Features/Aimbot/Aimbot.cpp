@@ -216,35 +216,35 @@ bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEnti
 }
 
 static std::array<WeaponPredictionData, 29> prediction_weapon_data = { {
-	{ "Spitfire", false, 0.f, false },
-	{ "Alternator", false, 0.f, false },
-	{ "R-201 Carbine", false, 0.f, false },
-	{ "Longbow-DMR", false, 0.f, false },
-	{ "Hammond P2016", false, 0.f, false },
-	{ "RE-45 Auto", false, 0.f, false },
-	{ "B3 Wingman", false, 0.f, false },
-	{ "EVA-8 Auto", false, 0.f, false },
-	{ "EPG-1", true, 2000.f, false },
-	{ "CAR", false, 0.f, false },
-	{ "MGL Mag Launcher", true, 1700.f, true },
-	{ "Volt", false, 0.f, false },
-	{ "Archer", false, 0.f, false },
-	{ "D-2 Double Take", true, 5000.f, false },
-	{ "Charge Rifle", false, 0.f, false },
-	{ "Kraber-AP Sniper", false, 0.f, false },
-	{ "Sidewinder SMR", true, 3200.f, false },
-	{ "LG-97 Thunderbolt", false, 0.f, false },
-	{ "R-97", false, 0.f, false },
-	{ "R-101 Carbine", false, 0.f, false },
-	{ "Hemlok BF-R", false, 0.f, false },
-	{ "G2A5", false, 0.f, false },
-	{ "V-47 Flatline", false, 0.f, false },
-	{ "L-STAR", true, 3000.f, false },
-	{ "X-55 Devotion", false, 0.f, false },
-	{ "Mastiff", true, 2468.f, false },
-	{ "EM-4 Cold War", true, 3300.f, true },
-	{ "R-6P Softball", true, 2468.f, true },
-	{ "SA-3 Mozambique", false, 0.f, false }
+	{ "Spitfire", false, 0.f, false, false },
+	{ "Alternator", false, 0.f, false, false},
+	{ "R-201 Carbine", false, 0.f, false, false},
+	{ "Longbow-DMR", false, 0.f, false, true},
+	{ "Hammond P2016", false, 0.f, false, true},
+	{ "RE-45 Auto", false, 0.f, false, false},
+	{ "B3 Wingman", false, 0.f, false, true},
+	{ "EVA-8 Auto", false, 0.f, false, false},
+	{ "EPG-1", true, 2000.f, false, true},
+	{ "CAR", false, 0.f, false, false},
+	{ "MGL Mag Launcher", true, 1700.f, true, true},
+	{ "Volt", false, 0.f, false, false},
+	{ "Archer", false, 0.f, false, true},
+	{ "D-2 Double Take", true, 5000.f, false, true},
+	{ "Charge Rifle", false, 0.f, false, false},
+	{ "Kraber-AP Sniper", false, 0.f, false, true},
+	{ "Sidewinder SMR", true, 3200.f, false, false},
+	{ "LG-97 Thunderbolt", false, 0.f, false, true},
+	{ "R-97", false, 0.f, false, false},
+	{ "R-101 Carbine", false, 0.f, false, false},
+	{ "Hemlok BF-R", false, 0.f, false, true},
+	{ "G2A5", false, 0.f, false, true},
+	{ "V-47 Flatline", false, 0.f, false, false},
+	{ "L-STAR", true, 3000.f, false, false},
+	{ "X-55 Devotion", false, 0.f, false, false},
+	{ "Mastiff", true, 2468.f, false, true},
+	{ "EM-4 Cold War", true, 3300.f, true, true},
+	{ "R-6P Softball", true, 2468.f, true, true},
+	{ "SA-3 Mozambique", false, 0.f, false, true }
 } };
 
 WeaponPredictionData GunRequiresPrediction(C_BaseEntity* pLocalClientEntity)
@@ -263,4 +263,40 @@ WeaponPredictionData GunRequiresPrediction(C_BaseEntity* pLocalClientEntity)
 	}
 
 	return {};
+}
+
+void AutoShoot(CUserCmd* pCUserCmd, C_BaseEntity* pLocalPlayer)
+{
+	if (pLocalPlayer)
+	{
+		if (CWeapon* p_weapon = pLocalPlayer->GetActiveWeapon())
+		{
+			if (const char* p_weapon_name = p_weapon->GetWeaponRealName())
+			{
+				std::string s_weapon_name{ p_weapon_name };
+				for (WeaponPredictionData const& weapon_data : prediction_weapon_data)
+				{
+					if (weapon_data.weapon_name.compare(s_weapon_name) == 0 && !weapon_data.is_single_fire)
+					{
+						pCUserCmd->m_buttons |= 1;
+						return;
+					}
+
+				}
+			}
+		}
+	}
+
+	static int shoot_tick = 0;
+	constexpr int shoot_interval = 1;
+
+	if (shoot_tick++ >= shoot_interval)
+	{
+		pCUserCmd->m_buttons |= 1;
+		shoot_tick = 0;
+	}
+	else
+	{
+		pCUserCmd->m_buttons &= ~1;
+	}
 }

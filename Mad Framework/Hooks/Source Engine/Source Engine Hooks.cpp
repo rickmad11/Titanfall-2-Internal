@@ -20,6 +20,9 @@ namespace MadFramework::SourceEngineHooks
 		{
 			std::lock_guard<std::mutex> lock(render_mutex);
 
+			if (menuState.vPlayer_OOFArrow)
+				std::lock_guard<std::mutex> lock_oof_arrow(render_mutex_oof_arrow);
+
 			IClientEntityList* pIClientEntityList = MadFramework::InterfaceManager::GetInterface<IClientEntityList>();
 			IVEngineClient* pIVEngineClient = MadFramework::InterfaceManager::GetInterface<IVEngineClient>();
 
@@ -78,6 +81,17 @@ namespace MadFramework::SourceEngineHooks
 							}
 
 							Vector4 entity_screen_pos{};
+
+							if (menuState.vPlayer_OOFArrow)
+							{
+								EntityRenderDataOOFArrow local_entity_render_data_oof_arrow;
+								local_entity_render_data_oof_arrow.is_visible = IsVisible(pC_BaseEntity, pLocalClientEntity);
+
+								GetEntity2DBoundsNoWTSCheck(pC_BaseEntity, entity_screen_pos);
+								local_entity_render_data_oof_arrow.screenBasePosition = entity_screen_pos;
+
+								entity_render_data_oof_arrow.emplace_back(local_entity_render_data_oof_arrow);
+							}
 
 							if (pC_BaseEntity->IsTitan())
 							{
@@ -571,20 +585,7 @@ namespace MadFramework::SourceEngineHooks
 
 						//Should only be used with Silent aim, aimlock and auto aim sucks therefore I won't support it
 						if (menuState.aAutoAttack)
-						{
-							static int shoot_tick = 0;
-							constexpr int shoot_interval = 1;
-
-							if (shoot_tick++ >= shoot_interval)
-							{
-								pCUserCmd->m_buttons |= 1;
-								shoot_tick = 0;
-							}
-							else
-							{
-								pCUserCmd->m_buttons &= ~1;
-							}
-						}
+							AutoShoot(pCUserCmd, pLocalClientEntity);
 
 						if(menuState.aAutoZoom)
 						{
@@ -646,7 +647,7 @@ namespace MadFramework::SourceEngineHooks
 			*static_cast<DWORD*>(pGameCurrency) = 100'000'000;
 
 		if (menuState.log_server_info)
-			HookServerConnectionInfo(Menu::state.log_server_info); //my entire menu state reading/writing is not thread safe, idc at this point
+			HookServerConnectionInfo(Menu::state.log_server_info, Menu::state.log_current_server_info); //my entire menu state reading/writing is not thread safe, idc at this point
 
 		struct GlobalVars //.rdata //F3 44 0F 59 25 ?? ?? ?? ?? EB
 		{

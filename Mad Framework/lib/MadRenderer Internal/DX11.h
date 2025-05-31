@@ -19,6 +19,7 @@ namespace MadRenderer
 	{
 		using Vector2 = DirectX::SimpleMath::Vector2;
 		using Vector4 = DirectX::SimpleMath::Vector4;
+		using Vector3 = DirectX::SimpleMath::Vector3;
 		using Color = DirectX::SimpleMath::Color;
 
 		explicit RenderList(class DX11* pRenderer) : pRenderer(pRenderer)
@@ -41,6 +42,7 @@ namespace MadRenderer
 		void DrawRect(Vector4 const& rect, float strokeWidth, Color const& InsideColor, Color const& OutlineColor) noexcept;
 		void DrawOutlinedString(const char* string, Vector2 pos, Color color, float scale) noexcept;
 		void DrawCircle(Vector2 pos, float radius, Color const& color) noexcept;
+		void DrawArrow(Vector2 target2D, float radius, Color color) noexcept;
 
 		template <int smoothness>
 		void DrawSmoothCircle(Vector2 pos, float radius, Color const& color) noexcept;

@@ -58,6 +58,7 @@ namespace SourceEngine::ClientClass::Offset
 #define INTERFACE_NAME_I_VENGINE_CLIENT "VEngineClient013"
 #define INTERFACE_NAME_I_CLIENT_ENTITY_LIST "VClientEntityList003"
 #define INTERFACE_NAME_I_ENGINE_TRACE "EngineTraceClient004"
+#define INTERFACE_NAME_I_ENGINE_CVAR "VEngineCvar007"
 
 //All the Interfaces we get through pattern scanning may require manual adjustments in the GetInterface function
 //Interface AOB
@@ -80,7 +81,10 @@ namespace SourceEngine::ClientClass::Offset
 #include "Classes/CGlobalVars.h"
 #include "Classes/CTraceFilter.h"
 #include "Classes/CUserCmd.h"
-
+#include "Classes/ConCommandBase.h"
+#include "Classes/IConVar.h"
+#include "Classes/IConsoleDisplayFunc.h"
+#include "Classes/ConVar.h"
 
 #include "Interfaces/IClientNetworkable.h"
 #include "Interfaces/IHandleEntity.h"
@@ -95,6 +99,8 @@ namespace SourceEngine::ClientClass::Offset
 #include "Interfaces/IViewRender.h"
 #include "Interfaces/IEngineTrace.h"
 #include "Interfaces/ITraceFilter.h"
+#include "Interfaces/IAppSystem.h"
+#include "Interfaces/ICvar.h"
 
 #include "NetVarManager/NetVarManager.h"
 #include "Interface Manager/Interface Manager.h"

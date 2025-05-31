@@ -132,6 +132,9 @@
     <ClCompile Include="src\Features\Misc\Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\ICvar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch\pch.h">
@@ -483,6 +486,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Features\Misc\Server.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\ICvar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IAppSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConCommandBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\IConVar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\IConsoleDisplayFunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConVar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

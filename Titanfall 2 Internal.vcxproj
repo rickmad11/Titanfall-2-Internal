@@ -171,6 +171,7 @@
     <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVars.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\C_BaseEntity.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IClientRenderable.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\ICvar.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IEngineTrace.cpp" />
     <ClCompile Include="Mad Framework\Framework.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\ClientClass.cpp" />
@@ -250,9 +251,15 @@
   <ItemGroup>
     <ClInclude Include="Mad Framework\Config Manager\ConfigManager.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVars.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConCommandBase.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConVar.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CTraceFilter.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CUserCmd.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CWeapon.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\IConsoleDisplayFunc.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\IConVar.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IAppSystem.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\ICvar.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\IEngineTrace.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Interfaces\ITraceFilter.h" />
     <ClInclude Include="Mad Framework\Framework.h" />

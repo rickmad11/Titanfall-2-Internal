@@ -81,6 +81,12 @@ namespace MadFramework::InterfaceManager
 			return GetOrInitializeInterface<T_INTERFACE, IViewRender>(pIViewRender, L"client.dll", INTERFACE_AOB_I_VIEW_RENDER);
 		}
 
+		if constexpr (std::is_same_v<T_INTERFACE, ICvar>)
+		{
+			static ICvar* pICvar = nullptr;
+			return GetOrInitializeInterface(pICvar, L"vstdlib.dll", INTERFACE_NAME_I_ENGINE_CVAR);
+		}
+
 		return nullptr;
 	}
 }

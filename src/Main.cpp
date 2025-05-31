@@ -59,6 +59,7 @@ DWORD WINAPI ThreadEntry(LPVOID lpThreadParameter)
     PLOG_INFO << "IBaseClientDLL: "     << MadFramework::InterfaceManager::GetInterface<IBaseClientDLL>();
     PLOG_INFO << "IViewRender: "        << MadFramework::InterfaceManager::GetInterface<IViewRender>();
     PLOG_INFO << "IEngineTrace: "       << MadFramework::InterfaceManager::GetInterface<IEngineTrace>();
+    PLOG_INFO << "ICvar: "              << MadFramework::InterfaceManager::GetInterface<ICvar>();
 
     PLOG_INFO << "Has ViewMatrix: " << MadFramework::InterfaceManager::GetInterface<IViewRender>()->HasWorldToScreenMatrix();
     PLOG_INFO << "ViewMatrix: " << MadFramework::InterfaceManager::GetInterface<IViewRender>()->GetWorldToScreenMatrix();

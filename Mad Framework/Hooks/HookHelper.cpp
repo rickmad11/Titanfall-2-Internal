@@ -30,8 +30,10 @@ namespace MadFramework::Hook
 		swap_chain_desc.SampleDesc.Count = 1;
 		swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
+		HRESULT result = 0;
+
 		Microsoft::WRL::ComPtr<IDXGISwapChain> pSwapChain = nullptr;
-		HRESULT result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_NULL, nullptr,
+		result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_NULL, nullptr,
 			NULL, nullptr, NULL,
 			D3D11_SDK_VERSION, &swap_chain_desc,
 			pSwapChain.GetAddressOf(), nullptr, nullptr, nullptr);
@@ -41,7 +43,24 @@ namespace MadFramework::Hook
 		{
 			PLOG_ERROR << "D3D11CreateDeviceAndSwapChain returned: " << result;
 			PLOG_ERROR << "Fatal Error could not create SwapChain";
-			return false;
+
+			PLOG_INFO << "Trying again with Driver type: D3D_DRIVER_TYPE_WARP";
+
+			pSwapChain.Reset();
+			result = 0;
+
+			result = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_WARP, nullptr,
+				NULL, nullptr, NULL,
+				D3D11_SDK_VERSION, &swap_chain_desc,
+				pSwapChain.GetAddressOf(), nullptr, nullptr, nullptr);
+
+			if (result < S_OK)
+			{
+				PLOG_ERROR << "D3D11CreateDeviceAndSwapChain returned: " << result;
+				PLOG_ERROR << "Fatal Error could not create SwapChain";
+
+				return false;
+			}
 		}
 
 		//8 -> Vtable index for Present

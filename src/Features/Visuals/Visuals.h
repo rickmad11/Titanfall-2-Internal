@@ -29,4 +29,16 @@ struct EntityRenderData
 inline std::mutex render_mutex;
 inline std::vector<EntityRenderData> entity_render_data;
 
+//only player
+struct EntityRenderDataOOFArrow
+{
+	Vector4 screenBasePosition{};
+	bool is_visible = false;
+};
+
+inline std::mutex render_mutex_oof_arrow;
+inline std::vector<EntityRenderDataOOFArrow> entity_render_data_oof_arrow;
+
+
+
 void MainVisuals();

@@ -6,6 +6,7 @@ struct WeaponPredictionData
 	bool requires_prediction = false;
 	float projectile_speed = 0.f;
 	bool requires_gravity = false;
+	bool is_single_fire = false;
 };
 
 void SilentAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc);
@@ -20,3 +21,4 @@ bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEnti
 void RefreshPlayerList();
 bool IsVisible(Vector3 bone_pos, C_BaseEntity* pLocalPlayer);
 WeaponPredictionData GunRequiresPrediction(C_BaseEntity* pLocalClientEntity);
+void AutoShoot(CUserCmd* pCUserCmd, C_BaseEntity* pLocalPlayer);

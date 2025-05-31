@@ -32,6 +32,8 @@ void SaveSettings()
     p_config_manager->AddValue("Visuals", "vPlayer_edge_box", menuState.vPlayer_edge_box);
     p_config_manager->AddValue("Visuals", "vPlayer_speed", menuState.vPlayer_speed);
     p_config_manager->AddValue("Visuals", "vPlayer_FilledBox", menuState.vPlayer_FilledBox);
+    p_config_manager->AddValue("Visuals", "vPlayer_OOFArrow", menuState.vPlayer_OOFArrow);
+    p_config_manager->AddValue("Visuals", "vOOFArrow_Radius", menuState.vOOFArrow_Radius);
 
     p_config_manager->AddValue("World", "vWorld", menuState.vWorld);
     p_config_manager->AddValue("World", "vNpcs", menuState.vNpcs);
@@ -139,6 +141,11 @@ void SaveSettings()
     p_config_manager->AddValue("MenuColors", "cPlayerFilledBox_b", MadFramework::Menu::menu_colors.cPlayerFilledBox.b);
     p_config_manager->AddValue("MenuColors", "cPlayerFilledBox_a", MadFramework::Menu::menu_colors.cPlayerFilledBox.a);
 
+    p_config_manager->AddValue("MenuColors", "cPlayerOOFArrow_r", MadFramework::Menu::menu_colors.cPlayerOOFArrow.r);
+    p_config_manager->AddValue("MenuColors", "cPlayerOOFArrow_g", MadFramework::Menu::menu_colors.cPlayerOOFArrow.g);
+    p_config_manager->AddValue("MenuColors", "cPlayerOOFArrow_b", MadFramework::Menu::menu_colors.cPlayerOOFArrow.b);
+    p_config_manager->AddValue("MenuColors", "cPlayerOOFArrow_a", MadFramework::Menu::menu_colors.cPlayerOOFArrow.a);
+
     p_config_manager->AddValue("MenuColors", "cInvPlayer_r", MadFramework::Menu::menu_colors.cInvPlayer.r);
     p_config_manager->AddValue("MenuColors", "cInvPlayer_g", MadFramework::Menu::menu_colors.cInvPlayer.g);
     p_config_manager->AddValue("MenuColors", "cInvPlayer_b", MadFramework::Menu::menu_colors.cInvPlayer.b);
@@ -153,6 +160,11 @@ void SaveSettings()
     p_config_manager->AddValue("MenuColors", "cInvPlayerFilledBox_g", MadFramework::Menu::menu_colors.cInvPlayerFilledBox.g);
     p_config_manager->AddValue("MenuColors", "cInvPlayerFilledBox_b", MadFramework::Menu::menu_colors.cInvPlayerFilledBox.b);
     p_config_manager->AddValue("MenuColors", "cInvPlayerFilledBox_a", MadFramework::Menu::menu_colors.cInvPlayerFilledBox.a);
+
+    p_config_manager->AddValue("MenuColors", "cInvPlayerOOFArrow_r", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.r);
+    p_config_manager->AddValue("MenuColors", "cInvPlayerOOFArrow_g", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.g);
+    p_config_manager->AddValue("MenuColors", "cInvPlayerOOFArrow_b", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.b);
+    p_config_manager->AddValue("MenuColors", "cInvPlayerOOFArrow_a", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.a);
 
     p_config_manager->AddValue("MenuColors", "cInvNpc_r", MadFramework::Menu::menu_colors.cInvNpc.r);
     p_config_manager->AddValue("MenuColors", "cInvNpc_g", MadFramework::Menu::menu_colors.cInvNpc.g);
@@ -286,6 +298,8 @@ void LoadSettings()
     p_config_manager->GetValue("Visuals", "vPlayer_edge_box", menuState.vPlayer_edge_box);
     p_config_manager->GetValue("Visuals", "vPlayer_speed", menuState.vPlayer_speed);
     p_config_manager->GetValue("Visuals", "vPlayer_FilledBox", menuState.vPlayer_FilledBox);
+    p_config_manager->GetValue("Visuals", "vPlayer_OOFArrow", menuState.vPlayer_OOFArrow);
+    p_config_manager->GetValue("Visuals", "vOOFArrow_Radius", menuState.vOOFArrow_Radius);
 
     p_config_manager->GetValue("World", "vWorld", menuState.vWorld);
     p_config_manager->GetValue("World", "vNpcs", menuState.vNpcs);
@@ -393,6 +407,11 @@ void LoadSettings()
     p_config_manager->GetValue("MenuColors", "cPlayerFilledBox_b", MadFramework::Menu::menu_colors.cPlayerFilledBox.b);
     p_config_manager->GetValue("MenuColors", "cPlayerFilledBox_a", MadFramework::Menu::menu_colors.cPlayerFilledBox.a);
 
+    p_config_manager->GetValue("MenuColors", "cPlayerOOFArrow_r", MadFramework::Menu::menu_colors.cPlayerOOFArrow.r);
+    p_config_manager->GetValue("MenuColors", "cPlayerOOFArrow_g", MadFramework::Menu::menu_colors.cPlayerOOFArrow.g);
+    p_config_manager->GetValue("MenuColors", "cPlayerOOFArrow_b", MadFramework::Menu::menu_colors.cPlayerOOFArrow.b);
+    p_config_manager->GetValue("MenuColors", "cPlayerOOFArrow_a", MadFramework::Menu::menu_colors.cPlayerOOFArrow.a);
+
     p_config_manager->GetValue("MenuColors", "cInvPlayer_r", MadFramework::Menu::menu_colors.cInvPlayer.r);
     p_config_manager->GetValue("MenuColors", "cInvPlayer_g", MadFramework::Menu::menu_colors.cInvPlayer.g);
     p_config_manager->GetValue("MenuColors", "cInvPlayer_b", MadFramework::Menu::menu_colors.cInvPlayer.b);
@@ -407,6 +426,11 @@ void LoadSettings()
     p_config_manager->GetValue("MenuColors", "cInvPlayerFilledBox_g", MadFramework::Menu::menu_colors.cInvPlayerFilledBox.g);
     p_config_manager->GetValue("MenuColors", "cInvPlayerFilledBox_b", MadFramework::Menu::menu_colors.cInvPlayerFilledBox.b);
     p_config_manager->GetValue("MenuColors", "cInvPlayerFilledBox_a", MadFramework::Menu::menu_colors.cInvPlayerFilledBox.a);
+
+    p_config_manager->GetValue("MenuColors", "cInvPlayerOOFArrow_r", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.r);
+    p_config_manager->GetValue("MenuColors", "cInvPlayerOOFArrow_g", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.g);
+    p_config_manager->GetValue("MenuColors", "cInvPlayerOOFArrow_b", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.b);
+    p_config_manager->GetValue("MenuColors", "cInvPlayerOOFArrow_a", MadFramework::Menu::menu_colors.cInvPlayerOOFArrow.a);
 
     p_config_manager->GetValue("MenuColors", "cInvNpc_r", MadFramework::Menu::menu_colors.cInvNpc.r);
     p_config_manager->GetValue("MenuColors", "cInvNpc_g", MadFramework::Menu::menu_colors.cInvNpc.g);

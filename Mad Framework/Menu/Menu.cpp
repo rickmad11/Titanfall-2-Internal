@@ -237,6 +237,8 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("EdgeBox", state.vPlayer_edge_box);
 				zgui::checkbox("Speed", state.vPlayer_speed);
 				zgui::checkbox("Filled Box", state.vPlayer_FilledBox);
+				zgui::checkbox("OOF Arrow", state.vPlayer_OOFArrow);
+				zgui::slider_float("OOF Arrow Radius", 10.f, 500.f, state.vOOFArrow_Radius);
 			}
 			zgui::end_groupbox();
 
@@ -270,6 +272,7 @@ void MadFramework::Menu::Render() noexcept
 				zgui::color_picker("Player Bones Color", menu_colors.cPlayerBones, 150);
 				zgui::color_picker("Player Name Color", menu_colors.cPlayerName, 150);
 				zgui::color_picker("Player Filled Box Color", menu_colors.cPlayerFilledBox, 150);
+				zgui::color_picker("Player OOF Arrow Color", menu_colors.cPlayerOOFArrow, 150);
 				zgui::color_picker("Npc Color", menu_colors.cNpc, 150);
 				zgui::color_picker("Npc Bones Color", menu_colors.cNpcBones, 150);
 				zgui::color_picker("Npc Name Color", menu_colors.cNpcName, 150);
@@ -282,6 +285,7 @@ void MadFramework::Menu::Render() noexcept
 				zgui::color_picker("Invisible Player Bones Color", menu_colors.cInvPlayerBones, 150);
 				zgui::color_picker("Invisible Player Name Color", menu_colors.cInvPlayerName, 150);
 				zgui::color_picker("Invisible Player Filled Box Color", menu_colors.cInvPlayerFilledBox, 150);
+				zgui::color_picker("Invisible Player OOF Arrow Color", menu_colors.cInvPlayerOOFArrow, 150);
 				zgui::color_picker("Invisible Npc Color", menu_colors.cInvNpc, 150);
 				zgui::color_picker("Invisible Npc Bones Color", menu_colors.cInvNpcBones, 150);
 				zgui::color_picker("Invisible Npc Name Color", menu_colors.cInvNpcName, 150);
@@ -341,11 +345,14 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("Infinite Money", state.infinite_money);
 				zgui::checkbox("Skin Changer", state.skin_changer);
 
-				zgui::slider_int("Skin ID", 0, 10, state.selected_skinID);
+				zgui::slider_int("Skin ID", 0, 50, state.selected_skinID);
 
 				zgui::dummy();
 
 				zgui::checkbox("Server Info Log", state.log_server_info);
+
+				if (zgui::button("Get Server IP", { 120, 20 }))
+					state.log_current_server_info = true;
 			}
 			zgui::end_groupbox();
 		}

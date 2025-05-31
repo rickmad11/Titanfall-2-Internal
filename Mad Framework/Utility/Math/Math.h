@@ -8,6 +8,7 @@ namespace MadFramework::Math::SourceEngine
 	void SetViewMatrix(Matrix4 const* const viewMatrix);
 	bool WorldToScreen(Vector3& entity_position) noexcept;
 	bool WorldToScreenWithBoundCheck(Vector3& entity_position) noexcept;
+	void WorldToScreenNoChecks(Vector3& entity_position) noexcept;
 }
 #endif
 
