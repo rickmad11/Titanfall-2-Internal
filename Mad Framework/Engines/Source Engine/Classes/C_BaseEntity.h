@@ -209,5 +209,8 @@ public:
 	NETVAR_OFFSET(GetTitanType, int, 0x4A8)
 	NETVAR_OFFSET(IsInAir, bool, 0x38C)
 	NETVAR_OFFSET(GetViewAngles, Vector2, 0x1E70)
+	NETVAR_OFFSET(IsOnZipline, bool, 0x15B4)
+	NETVAR_OFFSET(IsGrappling, bool, 0x15A5)
+	NETVAR_OFFSET(IsOnWall, bool, 0x1A29)
 	NETVAR_OFFSET_STRING(GetTitanName, const char*, 0x30C0)
 };

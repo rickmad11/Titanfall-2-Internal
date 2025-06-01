@@ -79,25 +79,35 @@ void RemoveCmdSendHook()
 
 void Bhop(CUserCmd* pCUserCmd, C_BaseEntity* pLocalClientEntity)
 {
-    if (pLocalClientEntity && pLocalClientEntity->IsAlive() && pLocalClientEntity->IsInAir() && !pLocalClientEntity->IsTitan())
+    if (!pLocalClientEntity->IsGrappling())
     {
-        Vector3 velocity = pLocalClientEntity->GetVelocity();
-        float speed = velocity.Length();
-    
-        if (speed < 5.0f)
-            return;
-    
-        const float yaw = pCUserCmd->m_worldViewAngles.y;
-    
-        const float vel_yaw = std::atan2(velocity.y, velocity.x) * (180 / std::numbers::pi_v<float>);
-        const float delta = std::remainderf(yaw - vel_yaw, 360.f); 
-    
-        if (delta > 0.f)
-            pCUserCmd->m_moves.y = -1;
-        else
-            pCUserCmd->m_moves.y = 1;
+        if (pLocalClientEntity && pLocalClientEntity->IsAlive() &&
+            pLocalClientEntity->IsInAir() && !pLocalClientEntity->IsTitan() &&
+            !pLocalClientEntity->IsOnWall())
+        {
+            Vector3 velocity = pLocalClientEntity->GetVelocity();
+            float speed = velocity.Length();
 
-        pCUserCmd->m_buttons |= 0x400'0000;
-        pCUserCmd->m_buttons &= ~0x2;
+            if (speed < 5.0f)
+                return;
+
+            const float yaw = pCUserCmd->m_worldViewAngles.y;
+
+            const float vel_yaw = std::atan2(velocity.y, velocity.x) * (180 / std::numbers::pi_v<float>);
+            const float delta = std::remainderf(yaw - vel_yaw, 360.f);
+
+            if (delta > 0.f)
+                pCUserCmd->m_moves.y = -1;
+            else
+                pCUserCmd->m_moves.y = 1;
+
+            pCUserCmd->m_buttons |= 0x400'0000;
+            pCUserCmd->m_buttons &= ~0x2;
+        }
+        else if (pLocalClientEntity->IsOnWall())
+        {
+            pCUserCmd->m_buttons |= 8;
+            pCUserCmd->m_moves.x = 1;
+        }
     }
 }
