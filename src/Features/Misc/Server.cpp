@@ -197,3 +197,19 @@ void RemoveServerConnectionHook()
         }
     }
 }
+
+void SendClientMessage(const std::string_view message)
+{
+    static float previousTick = 0.f;
+    float currentTick = clock() * 0.001f;
+
+    if (previousTick == 0.f) {
+        previousTick = currentTick;
+    }
+
+    if (currentTick - previousTick >= 0.5f)
+    {
+        MadFramework::InterfaceManager::GetInterface<IVEngineClient>()->SendClientMessage(message.data());
+        previousTick = 0.f;
+    }
+}

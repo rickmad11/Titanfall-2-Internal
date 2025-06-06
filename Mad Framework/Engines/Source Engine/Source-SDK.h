@@ -34,6 +34,7 @@ namespace SourceEngine::IVEngineClient::Index
 	constexpr int GetLocalPlayer = 43;
 	constexpr int GetPlayerInfo = 28;
 	constexpr int IsInGame = 200;
+	constexpr int ClientSendMessage = 277;
 }
 
 namespace SourceEngine::IClientRenderable::Index

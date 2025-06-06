@@ -638,6 +638,9 @@ namespace MadFramework::SourceEngineHooks
 			if (menuState.skin_changer)
 				SkinChanger(reinterpret_cast<C_BaseEntity*>(pIClientEntityList->GetClientEntity(pIVEngineClient->GetLocalPlayer())), menuState.selected_skinID);
 
+			if (menuState.chat_spam && menuState.chat_message)
+				SendClientMessage(menuState.chat_message);
+
 			MenuCmdSendFlags(menuState.fake_angles, menuState.fake_down_angle, menuState.fake_up_angle);
 		}
 

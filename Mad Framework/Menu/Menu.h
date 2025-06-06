@@ -116,6 +116,9 @@ namespace MadFramework::Menu
 		bool log_server_info = false;
 		bool log_current_server_info = false;
 
+		bool chat_spam = false;
+		const char* chat_message = nullptr;
+
 		enum AimbotBone : int //Has to map to the bone names vector inside menu, (yes im aware I should really change this)
 		{
 			Head,

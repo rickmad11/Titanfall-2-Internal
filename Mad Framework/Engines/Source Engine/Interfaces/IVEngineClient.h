@@ -177,4 +177,5 @@ public:
 	virtual void SetGamestatsData(CGamestatsData* pGamestatsData) = 0;
 	virtual CGamestatsData* GetGamestatsData() = 0;
 	virtual bool IsPlayingDemoALocallyRecordedDemo() = 0;
+	void SendClientMessage(const char* message) noexcept;
 };

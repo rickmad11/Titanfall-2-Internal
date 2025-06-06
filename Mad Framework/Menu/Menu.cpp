@@ -71,6 +71,24 @@ static float ZguiGetFrameTime() noexcept
 	return static_cast<float>(MadFramework::Utility::GetCurrentFpsCount<1>());
 }
 
+void HandleClipboardData(std::string& message)
+{
+	if (!OpenClipboard(nullptr))
+		return;
+
+	if (HANDLE h_clipboard = GetClipboardData(CF_TEXT))
+	{
+		if (const char* pszText = static_cast<const char*>(GlobalLock(h_clipboard)))
+		{
+			message.clear();
+			message = pszText;
+			GlobalUnlock(h_clipboard);
+		}
+	}
+
+	CloseClipboard();
+}
+
 void MadFramework::Menu::SetupZGUI() noexcept
 {
 	g_pForegroundRenderList = MadRenderer::DX11::Get()->GetForegroundRenderList();
@@ -353,6 +371,25 @@ void MadFramework::Menu::Render() noexcept
 
 				if (zgui::button("Get Server IP", { 120, 20 }))
 					state.log_current_server_info = true;
+
+				zgui::next_column(174, 18);
+
+				zgui::dummy();
+
+				zgui::checkbox("Chat Spam", state.chat_spam);
+
+				static std::string user_input{};
+
+				if (zgui::button("Get Clipboard text", {120, 20}))
+					HandleClipboardData(user_input);
+
+				if (zgui::button("Clear Message", { 120, 20 }))
+					user_input.clear();
+
+				zgui::text_input("Chat Spam Text", user_input, 200, 20, 64, 0);
+
+				if (!user_input.empty())
+					state.chat_message = user_input.c_str();
 			}
 			zgui::end_groupbox();
 		}
