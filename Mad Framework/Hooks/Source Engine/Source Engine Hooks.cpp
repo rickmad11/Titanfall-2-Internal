@@ -565,7 +565,7 @@ namespace MadFramework::SourceEngineHooks
 								GetTitanBonePos(pTargetEntity->GetTitanName(), menuState.aBonePlayer, boneMatrix, bone_pos);
 
 							if(menuState.aAimlockSmooth)
-								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.025f, menuState.aPrediction, pTargetEntity, false);
+								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.125f, menuState.aPrediction, pTargetEntity, false);
 							else
 								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false);
 						}
@@ -578,7 +578,7 @@ namespace MadFramework::SourceEngineHooks
 								GetTitanBonePos(pTargetEntity->GetTitanName(), menuState.aBoneNpc, boneMatrix, bone_pos);
 
 							if (menuState.aAimlockSmooth)
-								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.025f, menuState.aPrediction, pTargetEntity, true);
+								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.125f, menuState.aPrediction, pTargetEntity, true);
 							else
 								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true);
 						}
