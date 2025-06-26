@@ -119,6 +119,10 @@ namespace MadFramework::Menu
 		bool chat_spam = false;
 		const char* chat_message = nullptr;
 
+		bool thirdperson = false;
+		bool thirdperson_shoulder = false;
+		int shoulder_height = 0;
+
 		enum AimbotBone : int //Has to map to the bone names vector inside menu, (yes im aware I should really change this)
 		{
 			Head,

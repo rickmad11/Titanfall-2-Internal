@@ -244,6 +244,7 @@
     <ClCompile Include="src\Features\Misc\SaveManager.cpp" />
     <ClCompile Include="src\Features\Misc\Server.cpp" />
     <ClCompile Include="src\Features\Misc\Skin Changer.cpp" />
+    <ClCompile Include="src\Features\Misc\thirdperson.cpp" />
     <ClCompile Include="src\Features\Visuals\ESP.cpp" />
     <ClCompile Include="src\Features\Visuals\Visuals.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -370,6 +371,7 @@
     <ClInclude Include="src\Features\Misc\SaveManager.h" />
     <ClInclude Include="src\Features\Misc\Server.hpp" />
     <ClInclude Include="src\Features\Misc\Skin Changer.hpp" />
+    <ClInclude Include="src\Features\Misc\thirdperson.hpp" />
     <ClInclude Include="src\Features\Visuals\ESP.h" />
     <ClInclude Include="src\Features\Visuals\Visuals.h" />
   </ItemGroup>

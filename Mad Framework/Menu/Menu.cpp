@@ -390,6 +390,12 @@ void MadFramework::Menu::Render() noexcept
 
 				if (!user_input.empty())
 					state.chat_message = user_input.c_str();
+
+				zgui::dummy();
+
+				zgui::checkbox("thirdperson", state.thirdperson);
+				zgui::checkbox("thirdperson shoulder", state.thirdperson_shoulder);
+				zgui::slider_int("shoulder height", 0, 100, state.shoulder_height);
 			}
 			zgui::end_groupbox();
 		}

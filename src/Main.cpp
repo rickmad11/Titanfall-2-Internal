@@ -5,6 +5,7 @@
 #include "Features/Misc/HitSound.h"
 #include "Features/Misc/Movement.hpp"
 #include "Features/Misc/Server.hpp"
+#include "Features/Misc/thirdperson.hpp"
 #include "Hooks/HookHelper.h"
 #include "Hooks/DirectX11/DirectX11 Hooks.h"
 #include "Hooks/Source Engine/Source Engine Hooks.h"
@@ -113,6 +114,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD fdwReason, LPVOID lpvReserved)
         DisableUserMessageHook();
         RemoveCmdSendHook();
         RemoveServerConnectionHook();
+        RemoveCamThinkHook();
     }
 
     return TRUE;  

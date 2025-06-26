@@ -9,6 +9,7 @@
 #include "Features/Visuals/Visuals.h"
 #include "Menu/Menu.h"
 #include "Features/Misc/Server.hpp"
+#include "Features/Misc/thirdperson.hpp"
 
 namespace MadFramework::SourceEngineHooks
 {
@@ -257,7 +258,7 @@ namespace MadFramework::SourceEngineHooks
 								continue;
 
 							//I don't want to catch guns that are being held by a player/npc
-							if (!reinterpret_cast<CWeapon*>(pC_BaseEntity)->HasOwner())
+							if (reinterpret_cast<CWeapon*>(pC_BaseEntity)->HasOwner() != -1)
 								continue;
 
 							constexpr int str_offset = sizeof("models/weapons/") - sizeof(' ');
@@ -342,6 +343,7 @@ namespace MadFramework::SourceEngineHooks
 		IClientEntityList* pIClientEntityList = MadFramework::InterfaceManager::GetInterface<IClientEntityList>();
 
 		const bool is_ingame = pIVEngineClient->IsInGame();
+		bool thirdperson = (menuState.thirdperson || menuState.thirdperson_shoulder);
 
 		if(menuState.aPlayers || menuState.aNpcs)
 		{
@@ -418,7 +420,7 @@ namespace MadFramework::SourceEngineHooks
 
 							if(menuState.aVisibleCheck)
 							{
-								if(!IsVisible(screen_bone, pLocalClientEntity))
+								if(!IsVisible(screen_bone, pLocalClientEntity, thirdperson))
 									continue;
 							}
 
@@ -460,7 +462,7 @@ namespace MadFramework::SourceEngineHooks
 								UpdateHateModePlayerList(player_info.name);
 
 							if (pC_BaseEntity->GetLifeState() == 0)
-								hate_target_found = TryKillSelectedTarget(pC_BaseEntity, pLocalClientEntity, pCGlobalVars, pCUserCmd, player_info.name);
+								hate_target_found = TryKillSelectedTarget(pC_BaseEntity, pLocalClientEntity, pCGlobalVars, pCUserCmd, player_info.name, thirdperson);
 						}
 
 						if (*pC_EntitySignifierName == 'p' && *(pC_EntitySignifierName + 1) == 'l' && pC_BaseEntity->GetLifeState() == 0) //should be a separate function since this is 1:1 the same code as for npcs lol (I dont rly mind this since I wont work on this game anymore :( )
@@ -484,7 +486,7 @@ namespace MadFramework::SourceEngineHooks
 
 							if (menuState.aVisibleCheck)
 							{
-								if (!IsVisible(screen_bone, pLocalClientEntity))
+								if (!IsVisible(screen_bone, pLocalClientEntity, thirdperson))
 									continue;
 							}
 
@@ -540,7 +542,7 @@ namespace MadFramework::SourceEngineHooks
 							if (pTargetEntity->IsTitan() && pTargetEntity->GetTitanName())
 								GetTitanBonePos(pTargetEntity->GetTitanName(), menuState.aBoneNpc, boneMatrix, bone_pos);
 
-							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true);
+							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true, thirdperson);
 						}
 
 						if(menuState.aSilentAimPlayers && type == player)
@@ -550,7 +552,7 @@ namespace MadFramework::SourceEngineHooks
 							if (pTargetEntity->IsTitan() && pTargetEntity->GetTitanName())
 								GetTitanBonePos(pTargetEntity->GetTitanName(), menuState.aBonePlayer, boneMatrix, bone_pos);
 
-							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false);
+							SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false, thirdperson);
 						}
 
 						bool bAimlockKeyPressed = false;
@@ -565,9 +567,9 @@ namespace MadFramework::SourceEngineHooks
 								GetTitanBonePos(pTargetEntity->GetTitanName(), menuState.aBonePlayer, boneMatrix, bone_pos);
 
 							if(menuState.aAimlockSmooth)
-								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.125f, menuState.aPrediction, pTargetEntity, false);
+								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.125f, menuState.aPrediction, pTargetEntity, false, thirdperson);
 							else
-								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false);
+								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, false, thirdperson);
 						}
 
 						if (menuState.aAimlockNpcs && type == npc && bAimlockKeyPressed)
@@ -578,9 +580,9 @@ namespace MadFramework::SourceEngineHooks
 								GetTitanBonePos(pTargetEntity->GetTitanName(), menuState.aBoneNpc, boneMatrix, bone_pos);
 
 							if (menuState.aAimlockSmooth)
-								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.125f, menuState.aPrediction, pTargetEntity, true);
+								SmoothAim(pCUserCmd, pLocalClientEntity, bone_pos, ((100 - menuState.aAimlock_smoothness) / 100) * 0.125f, menuState.aPrediction, pTargetEntity, true, thirdperson);
 							else
-								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true);
+								Aimlock(pCUserCmd, pLocalClientEntity, bone_pos, menuState.aPrediction, pTargetEntity, true, thirdperson);
 						}
 
 						//Should only be used with Silent aim, aimlock and auto aim sucks therefore I won't support it
@@ -642,6 +644,11 @@ namespace MadFramework::SourceEngineHooks
 				SendClientMessage(menuState.chat_message);
 
 			MenuCmdSendFlags(menuState.fake_angles, menuState.fake_down_angle, menuState.fake_up_angle);
+
+			if (thirdperson)
+				EnableThirdPerson(menuState.thirdperson_shoulder, menuState.shoulder_height);
+			else
+				DisableThirdPerson(menuState.thirdperson_shoulder);
 		}
 
 		static void* pGameCurrency = static_cast<BYTE*>(Memory::GetModuleBase(L"engine.dll")) + 0x7A6FA8;

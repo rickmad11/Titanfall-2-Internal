@@ -6,6 +6,9 @@ public:
 	virtual void SetValue(const char* pValue) = 0;
 	virtual void SetValue(float flValue) = 0;
 	virtual void SetValue(int nValue) = 0;
+	virtual void SetValue(Color value) = 0;
 	virtual const char* GetName(void) const = 0;
+	virtual const char* GetBaseName(void) const = 0;
 	virtual bool IsFlagSet(int nFlag) const = 0;
+	virtual int unk() const = 0;
 };

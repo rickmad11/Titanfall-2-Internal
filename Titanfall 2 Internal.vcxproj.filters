@@ -135,6 +135,9 @@
     <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\ICvar.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Features\Misc\thirdperson.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch\pch.h">
@@ -504,6 +507,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConVar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Features\Misc\thirdperson.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

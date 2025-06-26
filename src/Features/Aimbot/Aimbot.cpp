@@ -34,7 +34,7 @@ bool IsVisible(C_BaseEntity* pEntity, C_BaseEntity* pLocalPlayer)
 	return is_visible;
 }
 
-bool IsVisible(Vector3 bone_pos, C_BaseEntity* pLocalPlayer)
+bool IsVisible(Vector3 bone_pos, C_BaseEntity* pLocalPlayer, bool thirdperson)
 {
 	IEngineTrace* pIEngineTrace = MadFramework::InterfaceManager::GetInterface<IEngineTrace>();
 
@@ -44,7 +44,12 @@ bool IsVisible(Vector3 bone_pos, C_BaseEntity* pLocalPlayer)
 	CTraceFilter trace_filter{};
 	trace_filter.pBaseEntity = pLocalPlayer;
 
-	ray.init(pLocalPlayer->GetCameraPos(), bone_pos);
+	Vector3 start = pLocalPlayer->GetCameraPos();
+
+	if (thirdperson)
+		start = pLocalPlayer->GetLocalOrigin() + Vector3{ 0, 40, 0 };
+
+	ray.init(start, bone_pos);
 
 	pIEngineTrace->TraceRay(ray, TRACE_MASK_SHOT, &trace_filter, &trace);
 
@@ -80,32 +85,56 @@ static void ApplyPrediction(C_BaseEntity* pTargetEntity, C_BaseEntity* pLocalPla
 	}
 }
 
-void SilentAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc)
+void SilentAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc, bool thirdperson)
 {
 	if (prediction_enabled)
 		ApplyPrediction(pTargetEntity, pLocalPlayer, vTarget, is_npc);
 
-	auto [yaw, pitch] = MadFramework::Math::CalcAngles(pLocalPlayer->GetCameraPos(), vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
+	Vector3 from = pLocalPlayer->GetCameraPos();
+
+	if (thirdperson)
+	{
+		if (CWeapon* p_weapon = pLocalPlayer->GetActiveWeapon())
+			from = p_weapon->GetWeaponView();
+	}
+
+	auto [yaw, pitch] = MadFramework::Math::CalcAngles(from, vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
 
 	pCmd->m_attackAngles = { pitch, yaw };
 }
 
-void Aimlock(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc)
+void Aimlock(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc, bool thirdperson)
 {
 	if (prediction_enabled)
 		ApplyPrediction(pTargetEntity, pLocalPlayer, vTarget, is_npc);
 
-	auto [yaw, pitch] = MadFramework::Math::CalcAngles(pLocalPlayer->GetCameraPos(), vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
+	Vector3 from = pLocalPlayer->GetCameraPos();
+
+	if (thirdperson)
+	{
+		if (CWeapon* p_weapon = pLocalPlayer->GetActiveWeapon())
+			from = p_weapon->GetWeaponView();
+	}
+
+	auto [yaw, pitch] = MadFramework::Math::CalcAngles(from, vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
 
 	pCmd->m_worldViewAngles = { pitch, yaw };
 }
 
-void SmoothAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, float smooth, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc)
+void SmoothAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, float smooth, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc, bool thirdperson)
 {
 	if (prediction_enabled)
 		ApplyPrediction(pTargetEntity, pLocalPlayer, vTarget, is_npc);
 
-	auto [yaw, pitch] = MadFramework::Math::CalcAngles(pLocalPlayer->GetCameraPos(), vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
+	Vector3 from = pLocalPlayer->GetCameraPos();
+
+	if (thirdperson)
+	{
+		if (CWeapon* p_weapon = pLocalPlayer->GetActiveWeapon())
+			from = p_weapon->GetWeaponView();
+	}
+
+	auto [yaw, pitch] = MadFramework::Math::CalcAngles(from, vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
 
 	pCmd->m_worldViewAngles = MadFramework::Math::Lerp(pCmd->m_worldViewAngles, { pitch, yaw }, smooth);
 }
@@ -159,7 +188,7 @@ void RefreshPlayerList()
 	player_name_set.clear();
 }
 
-bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEntity, CGlobalVars* pCGlobalVars, CUserCmd* pCUserCmd, std::string_view name)
+bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEntity, CGlobalVars* pCGlobalVars, CUserCmd* pCUserCmd, std::string_view name, bool thirdperson)
 {
 	bool player_is_target = false;
 
@@ -188,10 +217,10 @@ bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEnti
 		constexpr int head_bone_id = 12;
 		Vector3 bone_pos = Vector3{ boneMatrix[head_bone_id][0][3], boneMatrix[head_bone_id][1][3], boneMatrix[head_bone_id][2][3] };
 
-		if (!IsVisible(bone_pos, pLocalClientEntity))
+		if (!IsVisible(bone_pos, pLocalClientEntity, thirdperson))
 			return false;
 
-		SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, false, pTarget, false);
+		SilentAim(pCUserCmd, pLocalClientEntity, bone_pos, false, pTarget, false, thirdperson);
 
 		static int shoot_tick = 0;
 		constexpr int shoot_interval = 1;

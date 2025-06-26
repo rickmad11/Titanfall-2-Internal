@@ -27,8 +27,13 @@ public:
 	virtual const char*			GetHelpText(void) const;
 	virtual bool				IsRegistered(void) const;
 	virtual const char*			GetName(void) const;
+	virtual const char*			GetBaseName(void) const;
+	virtual int                 unk() const;
 	virtual void				AddFlags(int flags);
+	virtual int                 GetFlags() const;
 	virtual	bool				IsCommand(void) const;
+	virtual int					GetDLLIdentifier() const;
+	virtual void				Create(const char* pName, const char* pHelpString = 0, int flags = 0);
 	//void InstallChangeCallback(FnChangeCallback_t callback);
 	//float			GetFloat(void) const;
 	//int			GetInt(void) const;
@@ -37,6 +42,7 @@ public:
 	virtual void				SetValue(const char* value);
 	virtual void				SetValue(float value);
 	virtual void				SetValue(int value);
+	virtual void                SetValue(Color value);
 	//void						Revert(void);
 	//bool						GetMin(float& minVal) const;
 	//bool						GetMax(float& maxVal) const;

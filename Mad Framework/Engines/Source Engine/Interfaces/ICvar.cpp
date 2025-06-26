@@ -2,7 +2,7 @@
 
 ConVar* ICvar::FindVar(const char* var_name)
 {
-	return (ConVar*) ((MadFramework::Memory::InvokeVTableFunction<BYTE*>(this, 11, var_name)) + 0x8);
+	return MadFramework::Memory::InvokeVTableFunction<ConVar*>(this, 16, var_name);
 }
 
 ConCommand* ICvar::FindCommand(const char* name)

@@ -17,6 +17,8 @@ public:
 	virtual	bool				IsCommand(void) const;
 	virtual bool				IsFlagSet(int flag) const;
 	virtual void				AddFlags(int flags);
+	virtual void                RemoveFlags(int flags);
+	virtual int                 GetFlags() const;
 	virtual const char* GetName(void) const;
 	virtual const char* GetHelpText(void) const;
 	const ConCommandBase* GetNext(void) const;
