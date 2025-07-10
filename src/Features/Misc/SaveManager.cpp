@@ -2,6 +2,7 @@
 
 #include "SaveManager.h"
 
+#include "Framework.h"
 #include "Skin Changer.hpp"
 #include "Menu/Menu.h"
 
@@ -98,6 +99,9 @@ void SaveSettings()
     //p_config_manager->AddValue("Misc", "Infinite_Money", menuState.infinite_money);
     p_config_manager->AddValue("Misc", "skin_changer", menuState.skin_changer);
     p_config_manager->AddValue("Misc", "log_server_info", menuState.log_server_info);
+    p_config_manager->AddValue("Misc", "thirdperson", menuState.thirdperson);
+    p_config_manager->AddValue("Misc", "thirdperson_shoulder", menuState.thirdperson_shoulder);
+    p_config_manager->AddValue("Misc", "shoulder_height", menuState.shoulder_height);
 
     p_config_manager->AddValue("Settings", "MenuOpenKey", MadFramework::Menu::config.MenuOpenKey);
 
@@ -364,6 +368,9 @@ void LoadSettings()
     //p_config_manager->GetValue("Misc", "Infinite_Money", menuState.infinite_money);
     p_config_manager->GetValue("Misc", "skin_changer", menuState.skin_changer);
     p_config_manager->GetValue("Misc", "log_server_info", menuState.log_server_info);
+    p_config_manager->GetValue("Misc", "thirdperson", menuState.thirdperson);
+    p_config_manager->GetValue("Misc", "thirdperson_shoulder", menuState.thirdperson_shoulder);
+    p_config_manager->GetValue("Misc", "shoulder_height", menuState.shoulder_height);
 
     p_config_manager->GetValue("Settings", "MenuOpenKey", MadFramework::Menu::config.MenuOpenKey);
 
@@ -559,6 +566,27 @@ void LoadMenuKeyBind()
 
     p_config_manager->Begin();
     p_config_manager->GetValue("Settings", "MenuOpenKey", MadFramework::Menu::config.MenuOpenKey);
+    p_config_manager->End();
+
+    p_config_manager->InitializeConfigManager(current_save_file);
+}
+
+void LoadUserWinProcOption()
+{
+    ConfigManager* p_config_manager = ConfigManager::Get();
+
+    std::string current_save_file = p_config_manager->GetCurrentConfigFile();
+
+    p_config_manager->InitializeConfigManager(ConfigManager::default_string);
+
+    p_config_manager->Begin();
+
+    if (p_config_manager->ValueExists("WNDPROC-Option", "BlockGameWindow"))
+    {
+        p_config_manager->GetValue("WNDPROC-Option", "BlockGameWindow", MadFramework::Menu::config.block_game_window);
+        MadFramework::RenderCFs.isMenuOpen = false;
+    }
+
     p_config_manager->End();
 
     p_config_manager->InitializeConfigManager(current_save_file);

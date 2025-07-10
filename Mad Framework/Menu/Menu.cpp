@@ -127,6 +127,7 @@ void MadFramework::Menu::Render() noexcept
 		};
 
 		LoadMenuKeyBind();
+		LoadUserWinProcOption(); //Can only be explicitly set when modifying the config file, reason is since there r not a lot of ppl having an issue with this
 
 		init = true;
 	}

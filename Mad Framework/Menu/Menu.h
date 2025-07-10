@@ -8,6 +8,7 @@ namespace MadFramework::Menu
 	{
 		std::size_t MenuOpenKey = VK_INSERT;
 		std::size_t PanicKey = VK_END;
+		bool block_game_window = false;
 	}inline config {};
 
 	struct MenuState //this struct is being access in a non thread safe way everywhere, seems fine for now xD

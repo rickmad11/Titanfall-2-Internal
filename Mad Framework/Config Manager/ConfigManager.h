@@ -25,6 +25,7 @@ public:
 	void AddValue(std::string_view header, std::string_view name, auto value);
 	void GetValue(std::string_view header, std::string_view name, auto& value);
 	void ResetFile();
+	bool ValueExists(std::string_view header, std::string_view name);
 	void Begin();
 	void End();
 

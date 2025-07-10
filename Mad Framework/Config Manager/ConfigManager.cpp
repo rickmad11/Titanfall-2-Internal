@@ -103,6 +103,11 @@ void ConfigManager::ResetFile()
 	(void)ini_file.generate(ini_file_data, true);
 }
 
+bool ConfigManager::ValueExists(std::string_view header, std::string_view name)
+{
+	return ini_file_data.has(header.data()) && ini_file_data[header.data()].has(name.data());
+}
+
 void ConfigManager::Begin()
 {
 	mINI::INIFile ini_file{ ini_file_path.string() };
