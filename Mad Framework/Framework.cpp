@@ -136,7 +136,7 @@ namespace MadFramework
 		constexpr float text_scale = 1.f;
 
 		pForegroundRenderList->DrawString("MadFramework Private Testing v0.2", { 0, 0 }, { 255, 255, 255 }, text_scale);
-		pForegroundRenderList->DrawString("Rickmad11 Titanfall 2 Internal v2.1.1", { 0, 10 }, { 255, 255, 255 }, text_scale);
+		pForegroundRenderList->DrawString("Rickmad11 Titanfall 2 Internal v2.2.0", { 0, 10 }, { 255, 255, 255 }, text_scale);
 
 		pForegroundRenderList->DrawString("FPS: ", { 0, 20 }, { 255, 255, 255 }, text_scale);
 		pForegroundRenderList->DrawString(std::to_string(Utility::GetCurrentFpsCount<0>()).c_str(), { 30, 20 }, { 255, 255, 255 }, text_scale);

@@ -131,7 +131,7 @@ void MadFramework::Menu::Render() noexcept
 		init = true;
 	}
 
-	if (zgui::begin_window("Titanfall 2 Internal Public Build v2.1.1", { menuWidth - 16, menuHeight }, NULL, zgui::zgui_window_flags_no_ontoggle_animation)) {
+	if (zgui::begin_window("Titanfall 2 Internal Public Build v2.2.0", { menuWidth - 16, menuHeight }, NULL, zgui::zgui_window_flags_no_ontoggle_animation)) {
 
 		zgui::tab_button("Aimbot", { buttonWidth, buttonHeight }, state.aimbotTab);
 

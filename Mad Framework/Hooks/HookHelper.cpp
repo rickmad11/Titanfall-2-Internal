@@ -136,6 +136,15 @@ namespace MadFramework::Hook
 			Utility::WindowInfo windowData = Utility::GetCurrentWindowData();
 
 			*ppWNDPROC = reinterpret_cast<WNDPROC>(SetWindowLongPtr(windowData.windowHandle, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(pDetourFunctionWindowProc)));
+
+			if (!*ppWNDPROC)
+			{
+				PLOG_WARNING << "WindowProc returned: " << *ppWNDPROC;
+				PLOG_INFO << "Trying with GetForegroundWindow...";
+
+				*ppWNDPROC = reinterpret_cast<WNDPROC>(SetWindowLongPtr(GetForegroundWindow(), GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(pDetourFunctionWindowProc)));
+			}
+
 			PLOG_INFO << "Hooked WindowProc: " << *ppWNDPROC;
 
 			return *ppWNDPROC;
