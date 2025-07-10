@@ -14,6 +14,9 @@ namespace MadFramework::WindowsHooks
 
 	LRESULT __stdcall WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 	{
+		if (Menu::config.avoid_window_messages)
+			return CallWindowProcW(pWindowProc, hWnd, Msg, wParam, lParam);
+
 		if (!Menu::config.block_game_window)
 		{
 			switch (Msg)
