@@ -55,6 +55,24 @@ namespace MadFramework
 
 		//MainHookLogic();
 
+		//can only be set in the config file manually, reason see in menu.cpp init
+		if (Menu::config.avoid_window_messages)
+		{
+			static bool prev_menu_key_pressed = false;
+
+			bool curr_menu_key_status = GetAsyncKeyState(static_cast<int>(Menu::config.MenuOpenKey)) & 0x8000;
+			if ( !prev_menu_key_pressed && curr_menu_key_status)
+			{
+				RenderCFs.isMenuOpen = !RenderCFs.isMenuOpen;
+				prev_menu_key_pressed = true;
+			}
+			else if (!curr_menu_key_status)
+				prev_menu_key_pressed = false;
+
+			if (GetAsyncKeyState(static_cast<int>(Menu::config.PanicKey)) & 0x8000)
+				MadFramework::Exit();
+		}
+
 		if(RenderCFs.isMenuOpen)
 		{
 			zgui::globals::window_ctx.opened = true;

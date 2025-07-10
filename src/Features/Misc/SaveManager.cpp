@@ -587,6 +587,11 @@ void LoadUserWinProcOption()
         MadFramework::RenderCFs.isMenuOpen = false;
     }
 
+    if (p_config_manager->ValueExists("WNDPROC-Option", "ReplaceWithGetAsyncKeyState"))
+    {
+        p_config_manager->GetValue("WNDPROC-Option", "ReplaceWithGetAsyncKeyState", MadFramework::Menu::config.avoid_window_messages);
+    }
+
     p_config_manager->End();
 
     p_config_manager->InitializeConfigManager(current_save_file);
