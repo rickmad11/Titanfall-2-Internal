@@ -689,4 +689,23 @@ namespace MadFramework::SourceEngineHooks
 
 		return result;
 	}
+
+	void* __fastcall FindMDL(void* _this, studiohdr_t* studio, int flag)
+	{
+		static std::set<std::string> dumps;
+		static std::ofstream file(CMDLCache::getPathToMDL());
+		if (studio)
+		{
+			if (!dumps.contains(studio->name))
+			{
+				dumps.insert(studio->name);
+				PLOG_INFO << studio->name;
+				file << "--------------------" << studio->name << "--------------------\n";
+				mstudiobone_t* bone = reinterpret_cast<mstudiobone_t*>(studio->bone_offset + reinterpret_cast<byte*>(studio));
+				for (size_t i = 0; i <= static_cast<size_t>(studio->bone_count); i++)
+					file << "index: [" << i << "]\t" << bone[i].pszName() << '\n';
+			}
+		}
+		return ihFindMDL.fastcall<void*>(_this, studio, flag);
+	}
 }

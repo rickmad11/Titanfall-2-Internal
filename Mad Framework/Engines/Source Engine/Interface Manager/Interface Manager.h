@@ -87,6 +87,12 @@ namespace MadFramework::InterfaceManager
 			return GetOrInitializeInterface(pICvar, L"vstdlib.dll", INTERFACE_NAME_I_ENGINE_CVAR);
 		}
 
+		if constexpr (std::is_same_v<T_INTERFACE, CMDLCache>)
+		{
+			static CMDLCache* pCMDLCache = nullptr;
+			return GetOrInitializeInterface(pCMDLCache, L"datacache.dll", INTERFACE_NAME_MDLCACHE);
+		}
+
 		return nullptr;
 	}
 }

@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include <mutex>
 #include <regex>
+#include <set>
 
 //DirectX
 #include <d3d11.h>
@@ -40,8 +41,15 @@
 
 //MadRenderer Internal
 #include "lib/MadRenderer Internal/DX11.h"
+#if defined(_WIN64) 
+#if defined(_DEBUG) 
+#pragma comment(lib, "MadRenderer Internal Debug.lib")
+#pragma comment(lib, "DirectXTK Debug.lib")
+#else 
 #pragma comment(lib, "MadRenderer Internal.lib")
 #pragma comment(lib, "DirectXTK.lib")
+#endif
+#endif
 #include "lib/MadRenderer Internal/CursorRaw.h"
 
 //Mad Framework Libs
@@ -63,8 +71,8 @@
 #include "Log Manager/LogManager.h"
 #include "Config Manager/ConfigManager.h"
 
-//Mad Framework Source SDK
-#include "Engines/Source Engine/Source-SDK.h"
-
 //SafetyHook
 #include "lib/SafetyHook/safetyhook.hpp"
+
+//Mad Framework Source SDK
+#include "Engines/Source Engine/Source-SDK.h"

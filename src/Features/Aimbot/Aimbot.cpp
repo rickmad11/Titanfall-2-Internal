@@ -76,17 +76,23 @@ bool IsInsideFovCircle(float radius, Vector3 pos_to_check)
 
 static void ApplyPrediction(C_BaseEntity* pTargetEntity, C_BaseEntity* pLocalPlayer, Vector3& vTarget, bool is_npc)
 {
-	if (!is_npc)
+
+	UNREFERENCED_PARAMETER(is_npc);
+	WeaponPredictionData prediction_data {};
+	if (auto weapon = pLocalPlayer->GetActiveWeapon(); weapon && GunRequiresPrediction(weapon, prediction_data))
 	{
-		WeaponPredictionData weapon_pred_data = GunRequiresPrediction(pLocalPlayer);
-		float gravity = weapon_pred_data.requires_gravity ? 750.f : 0.f;
-		if (weapon_pred_data.requires_prediction)
-			vTarget = MadFramework::Math::PredictProjectilePosition(pLocalPlayer->GetCameraPos(), vTarget, pTargetEntity->GetVelocity(), weapon_pred_data.projectile_speed, gravity);
+		const float gravity = prediction_data.requires_gravity ? 450.f : 0.f;
+
+		vTarget = MadFramework::Math::PredictProjectilePosition(pLocalPlayer->GetCameraPos(), vTarget, pTargetEntity->GetVelocity(),
+			weapon->GetProjectileSpeed(), gravity);
 	}
 }
 
 void SilentAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc, bool thirdperson)
 {
+	float fixed_angles_buffer[3];
+	Vector2* fixed_angle = pLocalPlayer->fixAngles(fixed_angles_buffer);
+
 	if (prediction_enabled)
 		ApplyPrediction(pTargetEntity, pLocalPlayer, vTarget, is_npc);
 
@@ -99,12 +105,17 @@ void SilentAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool
 	}
 
 	auto [yaw, pitch] = MadFramework::Math::CalcAngles(from, vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
+	yaw -= fixed_angle->y;
+	pitch -= fixed_angle->x;
 
-	pCmd->m_attackAngles = { pitch, yaw };
+	pCmd->m_attackAngles = Vector2{ pitch, yaw };
 }
 
 void Aimlock(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc, bool thirdperson)
 {
+	float fixed_angles_buffer[3];
+	Vector2* fixed_angle = pLocalPlayer->fixAngles(fixed_angles_buffer);
+
 	if (prediction_enabled)
 		ApplyPrediction(pTargetEntity, pLocalPlayer, vTarget, is_npc);
 
@@ -117,12 +128,17 @@ void Aimlock(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, bool p
 	}
 
 	auto [yaw, pitch] = MadFramework::Math::CalcAngles(from, vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
+	yaw -= fixed_angle->y;
+	pitch -= fixed_angle->x;
 
-	pCmd->m_worldViewAngles = { pitch, yaw };
+	pCmd->m_worldViewAngles = Vector2{ pitch, yaw };
 }
 
 void SmoothAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, float smooth, bool prediction_enabled, C_BaseEntity* pTargetEntity, bool is_npc, bool thirdperson)
 {
+	float fixed_angles_buffer[3];
+	Vector2* fixed_angle = pLocalPlayer->fixAngles(fixed_angles_buffer);
+
 	if (prediction_enabled)
 		ApplyPrediction(pTargetEntity, pLocalPlayer, vTarget, is_npc);
 
@@ -135,8 +151,10 @@ void SmoothAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, floa
 	}
 
 	auto [yaw, pitch] = MadFramework::Math::CalcAngles(from, vTarget, -89, 89, -180, 180, pLocalPlayer->GetWeaponSway());
+	yaw -= fixed_angle->y;
+	pitch -= fixed_angle->x;
 
-	pCmd->m_worldViewAngles = MadFramework::Math::Lerp(pCmd->m_worldViewAngles, { pitch, yaw }, smooth);
+	pCmd->m_worldViewAngles = MadFramework::Math::Lerp(pCmd->m_worldViewAngles, Vector2{ pitch, yaw }, smooth);
 }
 
 void SilentSmoothAim(CUserCmd* pCmd, C_BaseEntity* pLocalPlayer, Vector3 vTarget, float smooth, Vector2& prev_attack_angle)
@@ -245,53 +263,53 @@ bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEnti
 }
 
 static std::array<WeaponPredictionData, 29> prediction_weapon_data = { {
-	{ "Spitfire", false, 0.f, false, false },
-	{ "Alternator", false, 0.f, false, false},
-	{ "R-201 Carbine", false, 0.f, false, false},
-	{ "Longbow-DMR", false, 0.f, false, true},
-	{ "Hammond P2016", false, 0.f, false, true},
-	{ "RE-45 Auto", false, 0.f, false, false},
-	{ "B3 Wingman", false, 0.f, false, true},
-	{ "EVA-8 Auto", false, 0.f, false, false},
-	{ "EPG-1", true, 2000.f, false, true},
-	{ "CAR", false, 0.f, false, false},
-	{ "MGL Mag Launcher", true, 1700.f, true, true},
-	{ "Volt", false, 0.f, false, false},
-	{ "Archer", false, 0.f, false, true},
-	{ "D-2 Double Take", true, 5000.f, false, true},
-	{ "Charge Rifle", false, 0.f, false, false},
-	{ "Kraber-AP Sniper", false, 0.f, false, true},
-	{ "Sidewinder SMR", true, 3200.f, false, false},
-	{ "LG-97 Thunderbolt", false, 0.f, false, true},
-	{ "R-97", false, 0.f, false, false},
-	{ "R-101 Carbine", false, 0.f, false, false},
-	{ "Hemlok BF-R", false, 0.f, false, true},
-	{ "G2A5", false, 0.f, false, true},
-	{ "V-47 Flatline", false, 0.f, false, false},
-	{ "L-STAR", true, 3000.f, false, false},
-	{ "X-55 Devotion", false, 0.f, false, false},
-	{ "Mastiff", true, 2468.f, false, true},
-	{ "EM-4 Cold War", true, 3300.f, true, true},
-	{ "R-6P Softball", true, 2468.f, true, true},
-	{ "SA-3 Mozambique", false, 0.f, false, true }
+	{ "Spitfire", false, false, false},
+	{ "Alternator", false, false, false},
+	{ "R-201 Carbine", false, false, false},
+	{ "Longbow-DMR", false, false, true},
+	{ "Hammond P2016", false, false, true},
+	{ "RE-45 Auto", false, false, false},
+	{ "B3 Wingman", false, false, true},
+	{ "EVA-8 Auto", false, false, false},
+	{ "EPG-1", true, false, true},
+	{ "CAR", false, false, false},
+	{ "MGL Mag Launcher", true, true, true},
+	{ "Volt", false, false, false},
+	{ "Archer", false, false, true},
+	{ "D-2 Double Take", true, false, true},
+	{ "Charge Rifle", false, false, false},
+	{ "Kraber-AP Sniper", true, true, true},
+	{ "Sidewinder SMR", false, false, false},
+	{ "LG-97 Thunderbolt", false, false, true},
+	{ "R-97", false, false, false},
+	{ "R-101 Carbine", false, false, false},
+	{ "Hemlok BF-R", false, false, true},
+	{ "G2A5", false, false, true},
+	{ "V-47 Flatline", false, false, false},
+	{ "L-STAR", true, false, false},
+	{ "X-55 Devotion", false, false, false},
+	{ "Mastiff", false, false, true},
+	{ "EM-4 Cold War", true, true, true},
+	{ "R-6P Softball", true, true, true},
+	{ "SA-3 Mozambique", false, false, true }
 } };
 
-WeaponPredictionData GunRequiresPrediction(C_BaseEntity* pLocalClientEntity)
+bool GunRequiresPrediction(CWeapon* p_weapon, WeaponPredictionData& prediction_data)
 {
-	if (CWeapon* p_weapon = pLocalClientEntity->GetActiveWeapon())
+	if (const char* p_weapon_name = p_weapon->GetWeaponRealName())
 	{
-		if (const char* p_weapon_name = p_weapon->GetWeaponRealName())
+		std::string s_weapon_name{ p_weapon_name };
+		for (WeaponPredictionData& weapon_data : prediction_weapon_data)
 		{
-			std::string s_weapon_name { p_weapon_name };
-			for (WeaponPredictionData const& weapon_data : prediction_weapon_data)
+			if (weapon_data.weapon_name.compare(s_weapon_name) == 0)
 			{
-				if (weapon_data.weapon_name.compare(s_weapon_name) == 0)
-					return weapon_data;
+				prediction_data = weapon_data;
+				return weapon_data.requires_prediction;
 			}
 		}
 	}
 
-	return {};
+	return false;
 }
 
 void AutoShoot(CUserCmd* pCUserCmd, C_BaseEntity* pLocalPlayer)

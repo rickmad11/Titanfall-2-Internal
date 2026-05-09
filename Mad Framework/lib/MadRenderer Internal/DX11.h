@@ -13,6 +13,7 @@ namespace MadRenderer
 	{
 		std::size_t count;
 		D3D11_PRIMITIVE_TOPOLOGY topology;
+		bool is_text = false;
 	};
 
 	struct RenderList final
@@ -42,12 +43,11 @@ namespace MadRenderer
 		void DrawRect(Vector4 const& rect, float strokeWidth, Color const& InsideColor, Color const& OutlineColor) noexcept;
 		void DrawOutlinedString(const char* string, Vector2 pos, Color color, float scale) noexcept;
 		void DrawCircle(Vector2 pos, float radius, Color const& color) noexcept;
-		void DrawArrow(Vector2 target2D, float radius, Color color) noexcept;
+		void DrawArrow(const Vector3 target2D, float radius, Color color) noexcept;
 
 		template <int smoothness>
 		void DrawSmoothCircle(Vector2 pos, float radius, Color const& color) noexcept;
 
-		void Draw2DText() const noexcept;
 		void DrawString(const char* string, Vector2 pos, Color color, float scale) noexcept;
 		Vector2 MeasureString(const char* string, bool ignore_whitespace = true) const noexcept;
 

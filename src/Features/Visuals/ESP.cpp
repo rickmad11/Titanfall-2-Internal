@@ -291,17 +291,25 @@ void GetTitanBonePos(std::string sTitanName, MadFramework::Menu::MenuState::Aimb
 		std::string name {};
 		int bones[3] {}; //0 head, 1 neck, 2 pelvis
 	};
-
+	/* titan game file names (mdl)
+	 * Ronin -> Locust
+	 * Ion -> ajax
+	 * Scorch -> orge
+	 * Tone -> wraith
+	 * Legion -> deadbolt
+	 * Monarch -> vanguard
+	 * Northstar -> Raptor
+	 */
 	static const std::array<TitanData, 7> titan_bone_array
 	{
 		{
-			{"Tone", 14, 16, 7},
-			{"Monarch", 14, 87, 6},
-			{"Scorch", 83, 29, 6},
-			{"Ronin", 93, 85, 3},
-			{"Northstar", 20, 83, 14},
-			{"Ion", 25, 90, 5},
-			{"Legion", 26, 29, 3}
+			{"Tone", 14, 11, 5},
+			{"Monarch", 14, 11, 5},
+			{"Scorch", 108, 105, 2},
+			{"Ronin", 90, 93, 2},
+			{"Northstar", 118, 118, 2},
+			{"Ion", 14, 11, 5},
+			{"Legion", 110, 110, 2}
 		}
 	};
 
@@ -331,6 +339,6 @@ void DrawBlackNameBlock(Vector4 screenBaseEntity, const char* pText, MadRenderer
 
 void DrawOOFArrow(Vector4 screenBaseEntity, float radius, zgui::color color, MadRenderer::RenderList* pBackGroundRenderList)
 {
-	pBackGroundRenderList->DrawArrow({ screenBaseEntity.x, screenBaseEntity.y }, radius,
+	pBackGroundRenderList->DrawArrow({ screenBaseEntity.x, screenBaseEntity.y, screenBaseEntity.w }, radius,
 		{ static_cast<float>(color.r), static_cast<float>(color.g), static_cast<float>(color.b), static_cast<float>(color.a) });
 }

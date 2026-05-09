@@ -194,6 +194,7 @@ public:
 	bool IsPlayer() noexcept;
 	bool IsPlayerDecoy() noexcept;
 	bool IsNpc() noexcept;
+	[[nodiscard]] Vector2* fixAngles(float (&buffer)[3]);
 
 public:
 	NETVAR(GetTeamNum, int, "CPlayer", "m_iTeamNum")
@@ -206,6 +207,8 @@ public:
 	NETVAR_OFFSET(GetVelocity, Vector3, 0x3C0)
 	NETVAR_OFFSET(GetCameraPos, Vector3, 0x19A4)
 	NETVAR_OFFSET(GetWeaponSway, Vector3, 0x1E34)
+	NETVAR_OFFSET(GetStaticAngles, Vector2, 0x1E70)
+	NETVAR_OFFSET(GetDeltaAngles, Vector2, 0x1E8C)
 	NETVAR_OFFSET(GetTitanType, int, 0x4A8)
 	NETVAR_OFFSET(IsInAir, bool, 0x38C)
 	NETVAR_OFFSET(GetViewAngles, Vector2, 0x1E70)
@@ -213,4 +216,5 @@ public:
 	NETVAR_OFFSET(IsGrappling, bool, 0x15A5)
 	NETVAR_OFFSET(IsOnWall, bool, 0x1A29)
 	NETVAR_OFFSET_STRING(GetTitanName, const char*, 0x30C0)
+	NETVAR_OFFSET_STRING(GetMDLName, const char*, 0x7B8)
 };

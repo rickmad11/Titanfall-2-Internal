@@ -92,8 +92,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -113,8 +114,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,8 +136,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,8 +158,9 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)pch;$(ProjectDir)lib;$(ProjectDir)Mad Framework;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <TreatWarningAsError>true</TreatWarningAsError>
+      <TreatWarningAsError>false</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -169,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="Mad Framework\Config Manager\ConfigManager.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVars.cpp" />
+    <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\CMDLCache.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Classes\C_BaseEntity.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\IClientRenderable.cpp" />
     <ClCompile Include="Mad Framework\Engines\Source Engine\Interfaces\ICvar.cpp" />
@@ -184,7 +189,6 @@
     <ClCompile Include="Mad Framework\Engines\Source Engine\NetVarManager\NetVarManager.cpp" />
     <ClCompile Include="Mad Framework\Hooks\Source Engine\Source Engine Hooks.cpp" />
     <ClCompile Include="Mad Framework\Hooks\Windows\Windows Hooks.cpp" />
-    <ClCompile Include="Mad Framework\lib\MadRenderer Internal\DX11.cpp" />
     <ClCompile Include="Mad Framework\lib\SafetyHook\safetyhook.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -252,6 +256,7 @@
   <ItemGroup>
     <ClInclude Include="Mad Framework\Config Manager\ConfigManager.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CGlobalVars.h" />
+    <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CMDLCache.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConCommandBase.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\ConVar.h" />
     <ClInclude Include="Mad Framework\Engines\Source Engine\Classes\CTraceFilter.h" />
@@ -297,7 +302,6 @@
     <ClInclude Include="Mad Framework\Hooks\Windows\Windows Hooks.h" />
     <ClInclude Include="Mad Framework\lib\MadRenderer Internal\CursorRaw.h" />
     <ClInclude Include="Mad Framework\lib\MadRenderer Internal\DX11.h" />
-    <ClInclude Include="Mad Framework\lib\MadRenderer Internal\font.h" />
     <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\Audio.h" />
     <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\BufferHelpers.h" />
     <ClInclude Include="Mad Framework\lib\MadRenderer Internal\Inc\CommonStates.h" />
@@ -377,10 +381,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Mad Framework\lib\MadRenderer Internal\Inc\SimpleMath.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="Mad Framework\lib\MadRenderer Internal\DirectXTK.lib" />
-    <Library Include="Mad Framework\lib\MadRenderer Internal\MadRenderer Internal.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

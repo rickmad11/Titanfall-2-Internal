@@ -60,6 +60,7 @@ namespace SourceEngine::ClientClass::Offset
 #define INTERFACE_NAME_I_CLIENT_ENTITY_LIST "VClientEntityList003"
 #define INTERFACE_NAME_I_ENGINE_TRACE "EngineTraceClient004"
 #define INTERFACE_NAME_I_ENGINE_CVAR "VEngineCvar007"
+#define INTERFACE_NAME_MDLCACHE "MDLCache004"
 
 //All the Interfaces we get through pattern scanning may require manual adjustments in the GetInterface function
 //Interface AOB
@@ -103,7 +104,10 @@ namespace SourceEngine::ClientClass::Offset
 #include "Interfaces/IAppSystem.h"
 #include "Interfaces/ICvar.h"
 
+#include "Classes/CMDLCache.h"
+
 #include "NetVarManager/NetVarManager.h"
 #include "Interface Manager/Interface Manager.h"
+
 
 #endif

@@ -145,25 +145,12 @@ namespace MadRenderer
 	{
 		pBackGroundRenderList->Draw();
 	
-		spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, pBlendState.Get(), nullptr, nullptr, pRasterizerState.Get(), nullptr);
-		pBackGroundRenderList->Draw2DText();
-		spriteBatch->End();
-	
-		pDeviceContext->PSSetShader(pPixelShader.Get(), nullptr, 0);
-		pDeviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0);
-		pDeviceContext->IASetInputLayout(pInputLayout.Get());
-	
-		UINT stride = sizeof(Vertex);
-		UINT offset = 0;
-		pDeviceContext->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &stride, &offset);
-	
 		pForegroundRenderList->Draw();
 	
 		spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, pNonPremultipliedState.Get(), nullptr, nullptr, pRasterizerState.Get(), nullptr);
-		pForegroundRenderList->Draw2DText();
 		pTextureRenderList->DrawTexture();
 		spriteBatch->End();
-	
+
 		pBackGroundRenderList->Clear();
 		pForegroundRenderList->Clear();
 		pTextureRenderList->Clear();
@@ -588,21 +575,50 @@ namespace MadRenderer
 	
 	void RenderList::Draw() const noexcept
 	{
-		if (vertices.empty())
-			return;
-	
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		pRenderer->pDeviceContext->Map(pRenderer->pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-		std::memcpy(mappedResource.pData, vertices.data(), vertices.size() * sizeof(Vertex));
-		pRenderer->pDeviceContext->Unmap(pRenderer->pVertexBuffer.Get(), 0);
-	
+		bool vertices_empty = vertices.empty();
+
+		if (!vertices_empty)
+		{
+			D3D11_MAPPED_SUBRESOURCE mappedResource;
+			pRenderer->pDeviceContext->Map(pRenderer->pVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+			std::memcpy(mappedResource.pData, vertices.data(), vertices.size() * sizeof(Vertex));
+			pRenderer->pDeviceContext->Unmap(pRenderer->pVertexBuffer.Get(), 0);
+		}
+
+		DirectX::SpriteBatch* p_SpriteBatch = pRenderer->spriteBatch.get();
+
+		std::size_t text_pos = 0;
 		std::size_t pos = 0;
 		for (auto const& batch : batches)
 		{
-			pRenderer->pDeviceContext->IASetPrimitiveTopology(batch.topology);
-			pRenderer->pDeviceContext->Draw(static_cast<UINT>(batch.count), static_cast<UINT>(pos));
-	
-			pos += batch.count;
+			if (batch.is_text)
+			{
+				//TODO this entire renderer needs to be rewritten from scratch 
+
+				p_SpriteBatch->Begin(DirectX::SpriteSortMode_Immediate, pRenderer->pBlendState.Get(), nullptr, nullptr, pRenderer->pRasterizerState.Get(), nullptr);
+				pRenderer->spriteFont->DrawString(p_SpriteBatch, text_buffer[text_pos].first.c_str(), text_buffer[text_pos].second, text_data[text_pos].first, 0.f, {}, text_data[text_pos].second);
+				++text_pos;
+				p_SpriteBatch->End();
+
+				pRenderer->pDeviceContext->PSSetShader(pRenderer->pPixelShader.Get(), nullptr, 0);
+				pRenderer->pDeviceContext->VSSetShader(pRenderer->pVertexShader.Get(), nullptr, 0);
+
+				pRenderer->pDeviceContext->IASetInputLayout(pRenderer->pInputLayout.Get());
+
+				UINT stride = sizeof(Vertex);
+				UINT offset = 0;
+				pRenderer->pDeviceContext->IASetVertexBuffers(0, 1, pRenderer->pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+				continue;
+			}
+
+			if (!vertices_empty)
+			{
+				pRenderer->pDeviceContext->IASetPrimitiveTopology(batch.topology);
+				pRenderer->pDeviceContext->Draw(static_cast<UINT>(batch.count), static_cast<UINT>(pos));
+
+				pos += batch.count;
+			}
 		}
 	}
 	
@@ -778,21 +794,27 @@ namespace MadRenderer
 		pRenderer->AddVertices(this, _vertices, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 	}
 
-	void RenderList::DrawArrow(Vector2 target2D, float radius, Color color) noexcept
+	void RenderList::DrawArrow(const Vector3 target2D, float radius, Color color) noexcept
 	{
 		const float windowCenterX = static_cast<float>(pRenderer->windowWidth) * 0.5f;
 		const float windowCenterY = static_cast<float>(pRenderer->windowHeight) * 0.5f;
 
 		const Vector2 screenCenter = { windowCenterX, windowCenterY };
 
-		const Vector2 delta = target2D - screenCenter;
-		const float angle = atan2f(delta.y, delta.x);
+		Vector2 delta = target2D - screenCenter;
+		float angle = atan2f(delta.y, delta.x);
 
 		Vector2 tip = 
 		{
 			windowCenterX + radius * cosf(angle),
 			windowCenterY + radius * sinf(angle)
 		};
+
+		if (delta.Length() < radius)
+		{
+			tip = target2D - Vector2{0, target2D.z + 1};
+			angle = std::numbers::pi_v<float> * 0.5f;
+		}
 
 		constexpr float size = 12.0f;
 
@@ -814,25 +836,6 @@ namespace MadRenderer
 		DrawLine(right, tip, color);
 		DrawLine(left, right, color); 
 	}
-
-	void RenderList::Draw2DText() const noexcept
-	{
-		if (text_buffer.empty() || text_data.empty())
-			return;
-	
-		if (text_buffer.size() != text_data.size())
-			return;
-	
-		DirectX::SpriteBatch* p_SpriteBatch = pRenderer->spriteBatch.get();
-	
-		std::size_t pos = 0;
-		for (std::pair<std::string, Vector2> const& text : text_buffer)
-		{
-			pRenderer->spriteFont->DrawString(p_SpriteBatch, text.first.c_str(), text.second, text_data[pos].first, 0.f, {}, text_data[pos].second);
-			++pos;
-		}
-	
-	}
 	
 	void RenderList::DrawString(const char* string, Vector2 pos, Color color, float scale) noexcept
 	{
@@ -841,6 +844,7 @@ namespace MadRenderer
 	
 		text_buffer.emplace_back(string, pos);
 		text_data.emplace_back(color, scale);
+		batches.push_back({ 0, D3D11_PRIMITIVE_TOPOLOGY{}, true });
 	}
 
 	void RenderList::DrawOutlinedString(const char* string, Vector2 pos, Color color, float scale) noexcept
@@ -850,18 +854,23 @@ namespace MadRenderer
 
 		text_buffer.emplace_back(string, pos + Vector2{1, 1});
 		text_data.emplace_back(Color{0, 0, 0, 255}, scale);
+		batches.push_back({ 0, D3D11_PRIMITIVE_TOPOLOGY{}, true });
 
 		text_buffer.emplace_back(string, pos + Vector2{ -1, 1 });
 		text_data.emplace_back(Color{ 0, 0, 0, 255 }, scale);
+		batches.push_back({ 0, D3D11_PRIMITIVE_TOPOLOGY{}, true });
 
 		text_buffer.emplace_back(string, pos + Vector2{ -1, -1 });
 		text_data.emplace_back(Color{ 0, 0, 0, 255 }, scale);
+		batches.push_back({ 0, D3D11_PRIMITIVE_TOPOLOGY{}, true });
 
 		text_buffer.emplace_back(string, pos + Vector2{ 1, -1 });
 		text_data.emplace_back(Color{ 0, 0, 0, 255 }, scale);
+		batches.push_back({ 0, D3D11_PRIMITIVE_TOPOLOGY{}, true });
 
 		text_buffer.emplace_back(string, pos);
 		text_data.emplace_back(color, scale);
+		batches.push_back({ 0, D3D11_PRIMITIVE_TOPOLOGY{}, true });
 	}
 
 	RenderList::Vector2 RenderList::MeasureString(const char* string, bool ignore_whitespace) const noexcept

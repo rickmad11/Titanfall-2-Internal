@@ -364,7 +364,7 @@ void MadFramework::Menu::Render() noexcept
 				zgui::checkbox("Infinite Money", state.infinite_money);
 				zgui::checkbox("Skin Changer", state.skin_changer);
 
-				zgui::slider_int("Skin ID", 0, 50, state.selected_skinID);
+				zgui::slider_int("Skin ID", 0, 200, state.selected_skinID); // 2E3B0A8 camo_range      dd 0C8h
 
 				zgui::dummy();
 

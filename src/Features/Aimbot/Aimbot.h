@@ -4,7 +4,6 @@ struct WeaponPredictionData
 {
 	std::string weapon_name{};
 	bool requires_prediction = false;
-	float projectile_speed = 0.f;
 	bool requires_gravity = false;
 	bool is_single_fire = false;
 };
@@ -20,5 +19,5 @@ void UpdateHateModeTargets(std::vector<zgui::multi_select_item_thread_safe>& sel
 bool TryKillSelectedTarget(C_BaseEntity* pTarget, C_BaseEntity* pLocalClientEntity, CGlobalVars* pCGlobalVars, CUserCmd* pCUserCmd, std::string_view name, bool thirdperson);
 void RefreshPlayerList();
 bool IsVisible(Vector3 bone_pos, C_BaseEntity* pLocalPlayer, bool thirdperson);
-WeaponPredictionData GunRequiresPrediction(C_BaseEntity* pLocalClientEntity);
+bool GunRequiresPrediction(CWeapon* p_weapon, WeaponPredictionData& prediction_data);
 void AutoShoot(CUserCmd* pCUserCmd, C_BaseEntity* pLocalPlayer);

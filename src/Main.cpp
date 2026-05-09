@@ -53,6 +53,10 @@ DWORD WINAPI ThreadEntry(LPVOID lpThreadParameter)
     if (!MadFramework::Hook::SourceEngineCreateMove(&MadFramework::SourceEngineHooks::CreateMove, &MadFramework::SourceEngineHooks::ihCreateMove))
         PLOG_WARNING << "Failed Hooking CreateMove";
 
+    //auto* cmdl = MadFramework::InterfaceManager::GetInterface<CMDLCache>();
+    //cmdl->dumpMDL(R"(mdl_dump.txt)", MadFramework::SourceEngineHooks::ihFindMDL, MadFramework::SourceEngineHooks::FindMDL);
+    //PLOG_INFO << "CMDLCache: " << cmdl << " dumping to: " << cmdl->getPathToMDL();
+
     IVEngineClient* pIVEngineClient = MadFramework::InterfaceManager::GetInterface<IVEngineClient>();
 
     PLOG_INFO << "IClientEntityList: "  << MadFramework::InterfaceManager::GetInterface<IClientEntityList>();
@@ -67,7 +71,6 @@ DWORD WINAPI ThreadEntry(LPVOID lpThreadParameter)
 #endif
 
     //@TODO 2D Map
-	//@TODO check wtf this is dword_130D0298 is 2 or 0 (2 means is cheater?)
     //MadFramework::NetVarManager::ConsoleDump();
 
 #ifdef SOURCE_ENGINE_SDK

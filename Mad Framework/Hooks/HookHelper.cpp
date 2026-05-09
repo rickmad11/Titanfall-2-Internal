@@ -2,6 +2,19 @@
 
 #include "HookHelper.h"
 
+static HWND CreateAndRegisterDummyWindow(WNDCLASSEX& wndclassex)
+{
+	RegisterClassExW(&wndclassex);
+
+	return ::CreateWindow(wndclassex.lpszClassName, L"CCP TF2 Dummy Window", WS_OVERLAPPEDWINDOW, 0, 0, 100, 100, nullptr, nullptr, wndclassex.hInstance, nullptr);
+}
+
+static void DestroyDummyWindow(HWND window, WNDCLASSEX& wndclassex)
+{
+	DestroyWindow(window);
+	UnregisterClassW(wndclassex.lpszClassName, wndclassex.hInstance);
+}
+
 namespace MadFramework::Hook
 {
 	bool DirectX11PresentAndResize(void* pDetourFunctionPresent, safetyhook::InlineHook* pInlineHookPresent ,
@@ -15,6 +28,14 @@ namespace MadFramework::Hook
 			return false;
 		}
 
+		WNDCLASSEX dummy_wndclassex{ .cbSize = sizeof(WNDCLASSEX) };
+		dummy_wndclassex.style = CS_HREDRAW | CS_VREDRAW;
+		dummy_wndclassex.lpszClassName = L"dummy";
+		dummy_wndclassex.lpfnWndProc = &DefWindowProcW;
+		dummy_wndclassex.hInstance = GetModuleHandleW(nullptr);
+
+		HWND const dummy_window_handle = CreateAndRegisterDummyWindow(dummy_wndclassex);
+
 		wchar_t window_name_buffer[256] {};
 		int c_length = GetWindowTextW(windowData.windowHandle, window_name_buffer, 256);
 
@@ -23,7 +44,7 @@ namespace MadFramework::Hook
 		PLOG_INFO << "Window Handle: " << windowData.windowHandle;
 
 		DXGI_SWAP_CHAIN_DESC swap_chain_desc{};
-		swap_chain_desc.OutputWindow = windowData.windowHandle;
+		swap_chain_desc.OutputWindow = dummy_window_handle;
 		swap_chain_desc.BufferUsage	 = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swap_chain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		swap_chain_desc.BufferCount = 1;
@@ -38,7 +59,6 @@ namespace MadFramework::Hook
 			D3D11_SDK_VERSION, &swap_chain_desc,
 			pSwapChain.GetAddressOf(), nullptr, nullptr, nullptr);
 
-		//bcs of D3D_DRIVER_TYPE_NULL it will return something like D3DERR_INVALIDCALL (I don't remember but this can be ignored)
 		if(result < S_OK) 
 		{
 			PLOG_ERROR << "D3D11CreateDeviceAndSwapChain returned: " << result;
@@ -59,6 +79,7 @@ namespace MadFramework::Hook
 				PLOG_ERROR << "D3D11CreateDeviceAndSwapChain returned: " << result;
 				PLOG_ERROR << "Fatal Error could not create SwapChain";
 
+				DestroyDummyWindow(dummy_window_handle, dummy_wndclassex);
 				return false;
 			}
 		}
@@ -94,6 +115,8 @@ namespace MadFramework::Hook
 			PLOG_ERROR << "Could either not get Present or ResizeBuffers Address Incorrect Vtable Index?";
 			PLOG_ERROR << "D3D11CreateDeviceAndSwapChain returned: " << result;
 			PLOG_ERROR << "Present: " << pPresent << " " << "ResizeBuffers: " << pResizeBuffers;
+
+			DestroyDummyWindow(dummy_window_handle, dummy_wndclassex);
 			return false;
 		}
 
@@ -105,7 +128,8 @@ namespace MadFramework::Hook
 
 		if(pDetourFunctionResizeBuffers)
 			*pInlineHookResizeBuffers = safetyhook::create_inline(pResizeBuffers, pDetourFunctionResizeBuffers);
-		
+
+		DestroyDummyWindow(dummy_window_handle, dummy_wndclassex);
 		return true;
 	}
 

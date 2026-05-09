@@ -7,7 +7,7 @@
 namespace MadFramework::WindowsHooks
 {
 	BOOL __stdcall BitBlt(HDC hdc, int x, int y, int cx, int cy, HDC hdcSrc, int x1, int y1, DWORD rop) {
-		PLOG_INFO << "BitBlt invoked Disabled Rendering!";
+		//PLOG_INFO << "BitBlt invoked Disabled Rendering!";
 		RenderCFs.isTakingScreenshot = true;
 		return ihBitBlt.stdcall<BOOL>(hdc, x, y, cx, cy, hdcSrc, x1, y1, rop);
 	}
